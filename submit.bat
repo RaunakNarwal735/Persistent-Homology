@@ -13,7 +13,7 @@ if not defined changes (
     exit /b
 )
 
-:: Stage changes
+:: Stage changes (venv will be ignored via .gitignore)
 git add .
 
 :: Commit with timestamp

@@ -1,0 +1,9 @@
+Graph A: Cycle5
+Nodes: 5 Edges: 5
+Graph B: Path5
+Nodes: 5 Edges: 4
+
+H0_bottleneck: 0.0
+H0_wasserstein: nan
+H1_bottleneck: 0.5
+H1_wasserstein: nan

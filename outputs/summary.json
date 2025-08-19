@@ -1,0 +1,22 @@
+{
+  "GraphA": {
+    "name": "Cycle5",
+    "nodes": 5,
+    "edges": 5,
+    "graph_plot": "outputs\\Cycle5_graph.png",
+    "diagram_plot": "outputs\\Cycle5_tda_diagram.png"
+  },
+  "GraphB": {
+    "name": "Path5",
+    "nodes": 5,
+    "edges": 4,
+    "graph_plot": "outputs\\Path5_graph.png",
+    "diagram_plot": "outputs\\Path5_tda_diagram.png"
+  },
+  "Metrics": {
+    "H0_bottleneck": 0.0,
+    "H0_wasserstein": NaN,
+    "H1_bottleneck": 0.5,
+    "H1_wasserstein": NaN
+  }
+}
