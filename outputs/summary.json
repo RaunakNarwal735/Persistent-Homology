@@ -1,22 +1,28 @@
 {
   "GraphA": {
-    "name": "Cycle5",
-    "nodes": 5,
-    "edges": 5,
-    "graph_plot": "outputs\\Cycle5_graph.png",
-    "diagram_plot": "outputs\\Cycle5_tda_diagram.png"
+    "name": "Pathway1",
+    "nodes": 98,
+    "edges": 335,
+    "diameter": 13,
+    "graph_plot": "outputs\\Pathway1_graph.png",
+    "diagram_plot": "outputs\\Pathway1_tda_diagram.png"
   },
   "GraphB": {
-    "name": "Path5",
-    "nodes": 5,
-    "edges": 4,
-    "graph_plot": "outputs\\Path5_graph.png",
-    "diagram_plot": "outputs\\Path5_tda_diagram.png"
+    "name": "Pathway2",
+    "nodes": 106,
+    "edges": 275,
+    "diameter": 12,
+    "graph_plot": "outputs\\Pathway2_graph.png",
+    "diagram_plot": "outputs\\Pathway2_tda_diagram.png"
   },
   "Metrics": {
-    "H0_bottleneck": 0.0,
-    "H0_wasserstein": NaN,
-    "H1_bottleneck": 0.5,
-    "H1_wasserstein": NaN
+    "H0_bottleneck": 2.0,
+    "H0_bottleneck_norm": 0.15384615384615385,
+    "H0_wasserstein": Infinity,
+    "H0_wasserstein_norm": Infinity,
+    "H1_bottleneck": 2.0,
+    "H1_bottleneck_norm": 0.15384615384615385,
+    "H1_wasserstein": 2.8722813232690143,
+    "H1_wasserstein_norm": 0.22094471717453956
   }
 }
