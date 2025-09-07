@@ -8,8 +8,13 @@ import argparse
 import sys
 import os
 from datetime import datetime
+import pandas as pd
+from sklearn.metrics import mean_squared_error
+from scipy.stats import pearsonr, ConstantInputWarning
+import warnings
 
-sns.set_style("white")
+# Global seaborn style
+sns.set_theme(style="white", context="notebook")
 
 # -------------------------------
 # 1. Parse KGML into reactions
@@ -74,51 +79,80 @@ def compute_similarity(y1, y2):
     y1 = y1 / np.max(y1, axis=1, keepdims=True)
     y2 = y2 / np.max(y2, axis=1, keepdims=True)
     
-    scores = []
+    dtw_scores, mse_scores, corr_scores = [], [], []
+    
     for i in range(min(y1.shape[0], y2.shape[0])):
-        dist = dtw.distance(y1[i], y2[i])
-        scores.append(dist)
-    return np.mean(scores), scores
+        # DTW
+        dtw_scores.append(dtw.distance(y1[i], y2[i]))
+        # MSE
+        mse_scores.append(mean_squared_error(y1[i], y2[i]))
+        # Correlation (handle constant signals)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=ConstantInputWarning)
+            try:
+                corr, _ = pearsonr(y1[i], y2[i])
+            except Exception:
+                corr = np.nan
+        corr_scores.append(corr)
+    
+    return {
+        "dtw_avg": np.nanmean(dtw_scores),
+        "mse_avg": np.nanmean(mse_scores),
+        "corr_avg": np.nanmean(corr_scores),
+        "dtw": dtw_scores,
+        "mse": mse_scores,
+        "corr": corr_scores
+    }
 
 # -------------------------------
 # 5. Plot functions
 # -------------------------------
 def plot_trajectories(t, y, species, title, save_path):
-    colors = sns.color_palette("hls", len(species))
+    colors = sns.color_palette("tab20", len(species))
     plt.figure(figsize=(12, 7))
     for i in range(y.shape[0]):
-        plt.plot(t, y[i], label=species[i], color=colors[i])
+        plt.plot(t, y[i], label=species[i], color=colors[i % len(colors)], lw=1.5)
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=8)
     plt.xlabel("Time")
     plt.ylabel("Concentration")
     plt.title(title)
-    sns.despine()
     plt.tight_layout()
     plt.savefig(save_path, dpi=300)
     plt.close()
 
 def plot_overlay(t1, y1, t2, y2, species, save_path, n_show=10):
+    colors = sns.color_palette("tab10", n_show)
     plt.figure(figsize=(12, 7))
-    colors = sns.color_palette("hls", n_show)
     for i in range(min(n_show, y1.shape[0], y2.shape[0])):
-        plt.plot(t1, y1[i], color=colors[i], linestyle="-", label=f"{species[i]} (Net1)")
-        plt.plot(t2, y2[i], color=colors[i], linestyle="--", label=f"{species[i]} (Net2)")
-    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=8)
+        plt.plot(t1, y1[i], color=colors[i], linestyle="-", lw=2, label=f"{species[i]} (Net1)")
+        plt.plot(t2, y2[i], color=colors[i], linestyle="--", lw=2, label=f"{species[i]} (Net2)")
+    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=9)
     plt.xlabel("Time")
     plt.ylabel("Concentration")
     plt.title("Overlay of species dynamics (first {} species)".format(n_show))
-    sns.despine()
     plt.tight_layout()
     plt.savefig(save_path, dpi=300)
     plt.close()
 
-def plot_similarity_bar(scores, species, save_path):
+def plot_similarity_bar(scores, species, metric, save_path):
     plt.figure(figsize=(12, 6))
-    sns.barplot(x=species[:len(scores)], y=scores, palette="hls")
+    sns.barplot(x=species[:len(scores)], y=scores, palette="crest", hue=None, legend=False)
     plt.xticks(rotation=90)
-    plt.ylabel("DTW Distance")
-    plt.title("Per-species dynamic similarity")
-    sns.despine()
+    plt.ylabel(metric)
+    plt.title(f"Per-species dynamic similarity ({metric})")
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300)
+    plt.close()
+
+def plot_heatmap(y, species, title, save_path):
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(
+        y, cmap="coolwarm", xticklabels=False, yticklabels=species,
+        cbar_kws={'label': 'Concentration'}
+    )
+    plt.xlabel("Time index")
+    plt.ylabel("Species")
+    plt.title(title)
     plt.tight_layout()
     plt.savefig(save_path, dpi=300)
     plt.close()
@@ -147,17 +181,24 @@ if __name__ == "__main__":
     plot_trajectories(t1, y1, sp1, f"Dynamics of {args.file1}", os.path.join(run_dir, "dynamics_net1.png"))
     plot_trajectories(t2, y2, sp2, f"Dynamics of {args.file2}", os.path.join(run_dir, "dynamics_net2.png"))
     plot_overlay(t1, y1, t2, y2, sp1, os.path.join(run_dir, "overlay.png"))
-    
-    # Compute similarity
-    score, per_species_scores = compute_similarity(y1, y2)
-    plot_similarity_bar(per_species_scores, sp1, os.path.join(run_dir, "similarity_bar.png"))
+    plot_heatmap(y1, sp1, f"Heatmap Network 1", os.path.join(run_dir, "heatmap_net1.png"))
+    plot_heatmap(y2, sp2, f"Heatmap Network 2", os.path.join(run_dir, "heatmap_net2.png"))
 
-    # Save score to text
+    # Compute similarity
+    results = compute_similarity(y1, y2)
+    plot_similarity_bar(results["dtw"], sp1, "DTW", os.path.join(run_dir, "similarity_dtw.png"))
+    plot_similarity_bar(results["mse"], sp1, "MSE", os.path.join(run_dir, "similarity_mse.png"))
+    plot_similarity_bar(results["corr"], sp1, "Correlation", os.path.join(run_dir, "similarity_corr.png"))
+
+    # Save scores to text
     with open(os.path.join(run_dir, "similarity.txt"), "w") as f:
-        f.write(f"Dynamic similarity score (DTW avg distance): {score:.3f}\n")
+        f.write(f"Dynamic similarity scores:\n")
+        f.write(f"DTW average: {results['dtw_avg']:.3f}\n")
+        f.write(f"MSE average: {results['mse_avg']:.3f}\n")
+        f.write(f"Correlation average: {results['corr_avg']:.3f}\n\n")
         f.write("Per-species scores:\n")
-        for s, sc in zip(sp1, per_species_scores):
-            f.write(f"{s}: {sc:.3f}\n")
+        for s, d, m, c in zip(sp1, results["dtw"], results["mse"], results["corr"]):
+            f.write(f"{s}: DTW={d:.3f}, MSE={m:.3f}, Corr={c:.3f}\n")
 
     print(f"Results saved in: {run_dir}")
-    print(f"Dynamic similarity score (DTW avg distance): {score:.3f}")
+    print(f"DTW avg: {results['dtw_avg']:.3f}, MSE avg: {results['mse_avg']:.3f}, Corr avg: {results['corr_avg']:.3f}")
