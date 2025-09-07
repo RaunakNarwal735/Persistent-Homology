@@ -5,3 +5,6 @@ networkx
 scipy
 ripser
 persim
+seaborn
+networkx
+dtaidistance

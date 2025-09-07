@@ -15,10 +15,6 @@ import xml.etree.ElementTree as ET
 
 sns.set(style="whitegrid")
 
-# -----------------------------
-# Utilities
-# -----------------------------
-
 def ensure_outdir(path: str = "outputs") -> Path:
     p = Path(path)
     p.mkdir(parents=True, exist_ok=True)
