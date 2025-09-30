@@ -108,8 +108,7 @@ def load_graph_from_kgml(kgml_path: str) -> nx.Graph:
 
 
 def graph_diameter(G: nx.Graph) -> int:
-    """Compute diameter robustly; for disconnected graphs, take max diameter of components.
-    Returns 0 for empty graphs and 0 for single-node graphs."""
+    
     if G.number_of_nodes() == 0:
         return 0
     # For graphs with single node or no edges, diameter is 0
@@ -278,9 +277,6 @@ def compare_diagrams_full(diagA, diagB, p: int = 2):
         metrics[f"H{dim}_wasserstein"] = ws
     return metrics
 
-# -----------------------------
-# Main pipeline
-# -----------------------------
 
 def run_pipeline(graphA: nx.Graph, graphB: nx.Graph, nameA: str, nameB: str, outdir: str = "outputs", maxdim: int = 1, p: int = 2):
     out = ensure_outdir(outdir)
@@ -310,11 +306,10 @@ def run_pipeline(graphA: nx.Graph, graphB: nx.Graph, nameA: str, nameB: str, out
     diamB = graph_diameter(graphB)
     diam_scale = max(diamA, diamB)
 
-    # create normalized metrics
     norm_metrics = {}
     for k, v in metrics.items():
         norm_metrics[k] = v
-        # normalized name
+        
         if diam_scale > 0 and (isinstance(v, (int, float)) and not math.isinf(v)):
             norm_metrics[f"{k}_norm"] = float(v) / float(diam_scale)
         elif diam_scale > 0 and math.isinf(v):

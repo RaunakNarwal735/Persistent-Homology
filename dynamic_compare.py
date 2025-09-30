@@ -13,12 +13,8 @@ from sklearn.metrics import mean_squared_error
 from scipy.stats import pearsonr, ConstantInputWarning
 import warnings
 
-# Global seaborn style
 sns.set_theme(style="white", context="notebook")
 
-# -------------------------------
-# 1. Parse KGML into reactions
-# -------------------------------
 def parse_kgml(kgml_file):
     tree = ET.parse(kgml_file)
     root = tree.getroot()
@@ -39,9 +35,6 @@ def parse_kgml(kgml_file):
     
     return list(species.keys()), reactions, species
 
-# -------------------------------
-# 2. Build ODEs
-# -------------------------------
 def build_ode_system(species, reactions, rate=1.0):
     n = len(species)
     species_index = {s: i for i, s in enumerate(species)}
@@ -61,20 +54,15 @@ def build_ode_system(species, reactions, rate=1.0):
     
     return odes, species_index
 
-# -------------------------------
-# 3. Simulate network
-# -------------------------------
+
 def simulate_network(kgml_file, t_span=(0, 20), n_points=200):
     species, reactions, mapping = parse_kgml(kgml_file)
-    odes, idx = build_ode_system(species, reactions)
+    odes, _ = build_ode_system(species, reactions)
     
     x0 = np.ones(len(species))
     sol = solve_ivp(odes, t_span, x0, t_eval=np.linspace(*t_span, n_points))
     return sol.t, sol.y, list(mapping.values())
 
-# -------------------------------
-# 4. Similarity scoring
-# -------------------------------
 def compute_similarity(y1, y2):
     y1 = y1 / np.max(y1, axis=1, keepdims=True)
     y2 = y2 / np.max(y2, axis=1, keepdims=True)
@@ -104,9 +92,6 @@ def compute_similarity(y1, y2):
         "corr": corr_scores
     }
 
-# -------------------------------
-# 5. Plot functions
-# -------------------------------
 def plot_trajectories(t, y, species, title, save_path):
     colors = sns.color_palette("tab20", len(species))
     plt.figure(figsize=(12, 7))
@@ -157,9 +142,6 @@ def plot_heatmap(y, species, title, save_path):
     plt.savefig(save_path, dpi=300)
     plt.close()
 
-# -------------------------------
-# Main
-# -------------------------------
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dynamic similarity of two KGML networks")
     parser.add_argument("file1", help="First KGML file")
@@ -177,14 +159,14 @@ if __name__ == "__main__":
     except Exception as e:
         sys.exit(f"Error parsing or simulating: {e}")
 
-    # Save plots
+    
     plot_trajectories(t1, y1, sp1, f"Dynamics of {args.file1}", os.path.join(run_dir, "dynamics_net1.png"))
     plot_trajectories(t2, y2, sp2, f"Dynamics of {args.file2}", os.path.join(run_dir, "dynamics_net2.png"))
     plot_overlay(t1, y1, t2, y2, sp1, os.path.join(run_dir, "overlay.png"))
     plot_heatmap(y1, sp1, f"Heatmap Network 1", os.path.join(run_dir, "heatmap_net1.png"))
     plot_heatmap(y2, sp2, f"Heatmap Network 2", os.path.join(run_dir, "heatmap_net2.png"))
 
-    # Compute similarity
+   
     results = compute_similarity(y1, y2)
     plot_similarity_bar(results["dtw"], sp1, "DTW", os.path.join(run_dir, "similarity_dtw.png"))
     plot_similarity_bar(results["mse"], sp1, "MSE", os.path.join(run_dir, "similarity_mse.png"))
@@ -200,5 +182,5 @@ if __name__ == "__main__":
         for s, d, m, c in zip(sp1, results["dtw"], results["mse"], results["corr"]):
             f.write(f"{s}: DTW={d:.3f}, MSE={m:.3f}, Corr={c:.3f}\n")
 
-    print(f"Results saved in: {run_dir}")
+    print(f"Results saved inn: {run_dir}")
     print(f"DTW avg: {results['dtw_avg']:.3f}, MSE avg: {results['mse_avg']:.3f}, Corr avg: {results['corr_avg']:.3f}")
