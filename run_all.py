@@ -47,7 +47,7 @@ def main():
     
     print(">>> Running dynamic similarity analysis...")
     dyn_cmd = [
-        sys.executable, "dynamic_compare.py",
+        sys.executable, "DC_plus.py",
         args.graphA,
         args.graphB,
         "--outdir", run_dir
