@@ -7,6 +7,7 @@ from dtaidistance import dtw
 import argparse
 import sys
 import os
+import networkx as nx
 from datetime import datetime
 import json
 import logging
@@ -15,8 +16,8 @@ from scipy.stats import pearsonr, ConstantInputWarning
 import warnings
 import pandas as pd
 from copy import deepcopy
-
-sns.set_theme(style="white", context="notebook")
+from matplotlib.animation import FuncAnimation
+sns.set_theme(style="whitegrid", context="talk")
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
@@ -227,6 +228,84 @@ def save_plot(fig, path):
     fig.savefig(path, dpi=300)
     plt.close(fig)
 
+def build_network_graph(species_list, reaction_info, species_map=None):
+    """
+    Build directed network from reaction_info.
+    Nodes = species, Edges = reactions.
+    """
+    G = nx.DiGraph()
+    # Add all species as nodes
+    for sid in species_list:
+        G.add_node(sid)
+    
+    # Add edges from reaction_info (using substrate_idxs and product_idxs)
+    for rx in reaction_info:
+        for s_idx in rx['substrate_idxs']:
+            for p_idx in rx['product_idxs']:
+                s = species_list[s_idx]
+                p = species_list[p_idx]
+                G.add_edge(s, p, reaction_id=rx['id'])
+    
+    return G
+
+
+def animate_network_polished_v3(G, species_list, reaction_info, t, y, pos, save_path,
+                                duration_sec=10, slow_factor=0.25):
+    
+    fig, ax = plt.subplots(figsize=(16, 12))  
+
+    # Fixed color gradient for nodes
+    palette = sns.color_palette("rocket", n_colors=len(species_list))
+    node_color_map = {sid: palette[i] for i, sid in enumerate(species_list)}
+
+    # Node size base (to make small nodes visible)
+    base_node_size = 400
+
+    # Prepare frames
+    total_frames = len(t)
+    fps = 30
+    skip = max(1, total_frames // (duration_sec * fps))
+    frame_indices = np.arange(0, total_frames, skip)
+    interval = 1000 / fps / slow_factor
+
+    def update(frame_idx):
+        ax.clear()
+        frame = frame_indices[frame_idx]
+
+        
+        node_sizes = base_node_size + 5000 * y[:, frame]
+        node_colors = [node_color_map[sid] for sid in species_list]
+
+        # Edge thickness proportional to reaction rates
+        edge_widths = []
+        for u, v, d in G.edges(data=True):
+            rx_id = d['reaction_id']
+            rx_idx = next((i for i, r in enumerate(reaction_info) if r['id'] == rx_id), None)
+            if rx_idx is not None:
+                info = reaction_info[rx_idx]
+                rate = 1.0
+                if info['substrate_idxs']:
+                    rate = info['k']
+                    for idx, sto in zip(info['substrate_idxs'], info.get('sto_subs', [1]*len(info['substrate_idxs']))):
+                        rate *= max(y[idx, frame], 0.0) ** sto
+                edge_widths.append(1 + 5 * rate)  # scale multiplier if needed
+            else:
+                edge_widths.append(1.0)
+
+        # Draw nodes and edges
+        nx.draw_networkx_nodes(G, pos, node_size=node_sizes,
+                               node_color=node_colors, ax=ax)
+        nx.draw_networkx_edges(G, pos, width=4, edge_color='Black', ax=ax)
+
+        # Optional: title
+        ax.set_title(f'Metabolic Network Dynamics  = {t[frame]:.2f}',
+                     fontsize=18)
+        ax.axis('off')
+
+    anim = FuncAnimation(fig, update, frames=len(frame_indices), interval=interval)
+    anim.save(save_path, writer='ffmpeg', dpi=200)
+    plt.close(fig)
+
 
 def plot_trajectories(t, y, species, title, save_path):
     fig = plt.figure(figsize=(12, 7))
@@ -333,12 +412,29 @@ def main():
     species_names = [map1[cid] for cid in common]
 
     # Save plots
+# Network 1
+   
+    _, _, reaction_info1 = build_ode_system(s1, r1, params=params)
+    G1 = build_network_graph(s1, reaction_info1, map1)
+    pos1 = nx.spring_layout(G1, seed=42)  # compute layout once
+    animate_network_polished_v3(G1, s1, reaction_info1, t1, y1_mean, pos1,
+                            save_path=os.path.join(run_dir, 'network1.mp4'))
+
+# ---------------- Network 2 ----------------
+    _, _, reaction_info2 = build_ode_system(s2, r2, params=params)
+    G2 = build_network_graph(s2, reaction_info2, map2)
+    pos2 = nx.spring_layout(G2, seed=42)  # separate layout for network 2
+    animate_network_polished_v3(G2, s2, reaction_info2, t2, y2_mean, pos2,
+                            save_path=os.path.join(run_dir, 'network2.mp4'))
+
+
+
     plot_trajectories(t1, y1_common, species_names, f'Dynamics {os.path.basename(args.file1)}', os.path.join(run_dir, 'dynamics_net1.png'))
     plot_trajectories(t2, y2_common, species_names, f'Dynamics {os.path.basename(args.file2)}', os.path.join(run_dir, 'dynamics_net2.png'))
     plot_overlay(t1, y1_common, t2, y2_common, species_names, os.path.join(run_dir, 'overlay.png'))
     plot_heatmap(y1_common, species_names, 'Heatmap Net1', os.path.join(run_dir, 'heatmap_net1.png'))
     plot_heatmap(y2_common, species_names, 'Heatmap Net2', os.path.join(run_dir, 'heatmap_net2.png'))
-
+    
     results = compute_similarity(y1_common, y2_common)
 
     plot_bar(results['dtw'], species_names, 'DTW', os.path.join(run_dir, 'similarity_dtw.png'))

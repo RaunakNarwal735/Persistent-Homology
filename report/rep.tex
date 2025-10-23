@@ -214,13 +214,86 @@ reduces to near-linear behavior when \( [S] \approx K_m \), mimicking the mass-a
 In real biochemical systems, \( V_{\text{max}} \) and \( K_m \) are enzyme-specific constants that define catalytic capacity. It is typically obtained from enzyme kinetics experiments, database values ( for example BRENDA, SABIO-RK) or parameter estimation via model fitting against time series metabolomics data (measurement and analysis of all small-molecule metabolites produced by metabolism within biological samples).
 Thus k = 1 is a placeholder, it acts like a neutral scaling factor to maintain numeric stability, it presevers network topology, it allows for dynamic comparison without requiring unkown biochemical dat.
 The Monte Carlo runs are also producing the same results because intial conditions and parameters are all the same. MC becomes functionally meanigfull when perturbations like random scaling and kinectic constants are introduced to evaluate robustness and sensitivity of dynamic similarity metrics.
+\\
 \textbf{Estimating rate constants} \\
 We can try to make our framework more biologically relevant by estimating rate constants using some approaches such as using computational parameter estimation methods, this might be time taking and maybe the trade off isn't fruitfull enough, so we will take estimating rate constant as an agenda point for future reports.
 One common approach is to fit the reaction model to avaible reaction data for metabolite concentrations over time by minimizing the error between the simulations and observed data points, using nonlinear least squares or global optimization. If we do no have direct experimental data for a map, then ballpark estimates may be taken from related literature.
+\\
 \textbf{Introducing animations for better visualisation} \\
-
+We have tried various ways to see similarities between the two maps, but static plots can only convey so much information. To enhance interpretability, we have added animations that dynamically illustrate how species concentrations evolve over time in both networks. We saw that most of the action is happening in the first few seconds of the reactions, and later it reaches equilibrium. The links of both the videos are attached here.
+\\
+\href{https://www.youtube.com/watch?v=FTIlpC7isY0}{Network1 Animation} \\
+\href{https://www.youtube.com/watch?v=V8wC7qTMtws}{Network2 Animation} \\
+Something about animations makes things very much interesting and increase the understandability of the dynamics, we can see how different species are changing over time and how they are interacting with each other. This dynamic visualization helps to grasp complex temporal patterns that static plots and raw numbers might miss.
+\\
+\textbf{Label:} Animations were made using matplotlib and seaborn libraries in python, the code is included in the repository. Nodes depict individual species and increase or decrease in size based on their concentration at each time point. Edges represent reactions, with thickness indicating flux magnitude. 
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\textbf{Network1 Map00400}
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=0.5\linewidth]{s1.png}}
+    
+\end{figure}
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=0.5\linewidth]{s2.png}}
+    
+\end{figure}
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=0.5\linewidth]{s3.png}}
+    
+\end{figure}
+\newpage
+\textbf{Network2 Map00400}
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=0.5\linewidth]{V1.png}}
+    
+\end{figure}
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=0.5\linewidth]{V2.png}}
+    
+\end{figure}
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=0.5\linewidth]{V3.png}}
+    
+\end{figure}
+\newpage
 \section*{Theorising digital organisms}
-
+I was thinking about how we can model digital organisms using networks, similar to biological systems, my planned digital organism, DIOR (digital organism) was a fun kind of project, mostly because i came across very complex research papers and i dropped the idea of making reality like digital organisms on my 12 GB RAM laptop. I say so because it took a whole year for a research team to move a single worm inside the screen. So my idea was to create DIOR using simple CRNs and keep text files as information and energy resources, we can have a virtual sun and a 2D grid for DIOR to live on. Let us dive deep on this Idea. \\
+Here is a link to scientific paper titled \href{https://www.nature.com/articles/s41598-024-52475-9}{"Simulation of the emergence of cell-like morphologies with evolutionary potential based on virtual molecular interactions"} \\
+\textbf{Abstract:} This study explored the emergence of life using a simulation model approach. The “multiset chemical lattice model” allows the placement of virtual molecules of multiple types in each lattice cell in a two-dimensional space. This model was capable of describing a wide variety of states and interactions, such as the diffusion, chemical reaction, and polymerization of virtual molecules, in a limited number of lattice cell spaces. Moreover, this model was capable of describing a wide variety of states and interactions, even in the limited lattice cell space of 100 × 100 cells. In this study, I assumed 18 types of virtual molecules, i.e., 18 virtual numbers that do not correspond to real molecules with chemical reactions represented by transformation of the numbers that occur with a specified reaction rate probability. Furthermore, it considered the energy metabolism and energy resources in the environment, and was able to reproduce “evolution,” in which a certain cell-like shape that adapted to the environment survived under conditions of decreasing amounts of energy resources in the environment. This enabled the simulation of the emergence of cell-like shapes with the four minimum cellular requirements, i.e., boundary, metabolism, replication, and evolution, based solely on the interaction of virtual molecules.
+\\
+Ishida (2024) used a 100 X 100 lattice of virtual molecules that diffuse, react and polymerise. His model showed that cell like shapes could spontaneously form with basic life features such as bounday, metabolism, replication and evolution. In his model, molecules of different types transformed stochastically simulating chemical reactions and it could contain a informational ploymer molecule through cell divisions. The model even included a form of energy metabolism, when energy resources in the environment were scarce, only certain shapes survived having a certain polymer and reproduced, which demonstrates an emergent evolutionary process. Attached snapshot from his paper, illustrates his multiset chemical model. \\
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=1\linewidth]{save_page-0001.jpg}}
+    
+\end{figure}
+\newpage
+Development of such a system would take so much compute and time, the OpenWorm project (an attempt to simulate simple 1 mm worm) required many years of work and parallel team. In 2013 their team released only a rudimentray demo that showed just a few body parts moving and reported it would take another three to five months for a user friendly virtual worm was full runnable. Below is the 2019 docker container version for the worm. \\
+\begin{figure}[H]
+    \centering
+   
+    \includegraphics[width=1\linewidth]{worm.png}}
+\end{figure}
+So our system DIOR would be a very simplistic organism taking decisions based on certain chemical reaction networks, the system would need a 2D world grid with energy resources for example vritual sun that periodically adds energy and a way to let DIOR eat resources (.txt files in our case). Many digital life platforms treat CPU time as energy, for example in Avida system each organism gets CPU cycle to runs its individual code and performing tasks yield extra cycle to run, anaologous to metabolizing food. We can simply credit DIOR with energy points when it ingests a text file. Another feature can be penalizing damage, for example if it runs out of energy or collides then it dies or loses health points. We can include asexual reporduction once DIOR reaches certain enrgy points. Our model needs to simple and complex at the same time, for example DIOR eats .txt files then it itself gets stored as a .txt file (or JSON/.cvs as there are more code friendly) so that it can be eaten up by its descendants when no other .txt file is available. We need to have just the necessary variables, to simulate full isolation and behaviour of DIOR.\\
 
 \vfill
 \noindent{\small Generated: \today}
