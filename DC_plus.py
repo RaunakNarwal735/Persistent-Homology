@@ -175,9 +175,7 @@ def simulate_mc(species_list, reactions, params=None, t_span=(0, 20), n_points=2
     Ys = np.stack([np.interp(t_ref, r[0], r[1]) if (len(r[0]) != len(t_ref) or not np.allclose(r[0], t_ref)) else r[1] for r in runs], axis=2)
     y_mean = np.mean(Ys, axis=2)
     return t_ref, y_mean, runs
-
-# ---------------------------- Similarity metrics ----------------------------
-
+#
 def normalize_rows(y):
     # avoid division by zero
     mx = np.max(y, axis=1, keepdims=True)
@@ -242,18 +240,23 @@ def plot_trajectories(t, y, species, title, save_path):
     save_plot(fig, save_path)
 
 
-def plot_overlay(t1, y1, t2, y2, species, save_path, n_show=10):
-    fig = plt.figure(figsize=(12, 7))
-    colors = sns.color_palette('tab10', max(2, n_show))
-    n = min(n_show, y1.shape[0], y2.shape[0])
+def plot_overlay(t1, y1, t2, y2, species, save_path):
+    fig = plt.figure(figsize=(14, 8))
+    n = min(y1.shape[0], y2.shape[0])
+    colors = sns.color_palette('tab20', max(4, n))
+    
     for i in range(n):
-        plt.plot(t1, y1[i], linestyle='-', lw=2, label=f"{species[i]} (Net1)")
-        plt.plot(t2, y2[i], linestyle='--', lw=2, label=f"{species[i]} (Net2)")
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=9)
+        plt.plot(t1, y1[i], linestyle='-', lw=1.8, color=colors[i % len(colors)], label=f"{species[i]} (Net1)")
+        plt.plot(t2, y2[i], linestyle='--', lw=1.8, color=colors[i % len(colors)], label=f"{species[i]} (Net2)")
+    
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=8)
     plt.xlabel('Time')
     plt.ylabel('Concentration')
-    plt.title(f'Overlay (first {n} species)')
-    save_plot(fig, save_path)
+    plt.title(f'Overlay of all {n} common species')
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
 
 
 def plot_heatmap(y, species, title, save_path):

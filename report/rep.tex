@@ -1,0 +1,228 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}            % clean, well-proportioned fonts (pdflatex-safe)
+\usepackage{microtype}         % better justification
+\usepackage[a4paper,margin=1in]{geometry} 
+\usepackage{parskip}           % space between paragraphs, no indent
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage[normalem]{ulem}
+% ----- STYLING -----
+\renewcommand{\familydefault}{\rmdefault} % serif body for a formal look
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{tcolorbox} % For title box
+\usepackage{titling}   % For custom title formatting
+\newtcolorbox{titlebox}{
+  colback=blue!5,
+  colframe=blue!40,
+  boxrule=0.95pt,
+  arc=6pt,
+  auto outer arc,
+  boxsep=6pt,
+  left=10pt,
+  right=10pt,
+  top=10pt,
+  bottom=10pt,
+  colbacktitle=white,
+  coltitle=black,
+  center title
+}
+
+
+% Redefine maketitle
+\pretitle{\begin{center}\begin{titlebox}\LARGE\bfseries}
+\posttitle{\end{titlebox}\end{center}}
+\preauthor{\begin{center}\large}
+\postauthor{\end{center}}
+\predate{\begin{center}}
+\postdate{\end{center}}
+
+\title{\textit{Biweekly Report 3 }\\[0.5em]
+Improving the dynamic comparison framework, expanding upon the ideas discussed in biweekly report 2 and theorising digital organisms}
+\author{Raunak Narwal\\
+Department of Mathematical Sciences \\
+Indian Institute of Science Education and Research, Mohali, 130406, Punjab}
+
+\date{ October 18, 2025}
+
+% Section spacing and look
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\section}{0pt}{1.2\baselineskip}{0.4\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.9\baselineskip}{0.25\baselineskip}
+
+% Header / footer (minimal)
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\small Biweekly Report III}
+\fancyhead[R]{\small Raunak Narwal}
+\fancyfoot[C]{\small Page \thepage}\setlength{\footskip}{20pt}
+
+
+% Utility for graphics with special filenames
+\newcommand{\imgfile}[1]{\detokenize{#1}}
+
+% ----- DOCUMENT -----
+\begin{document}
+\maketitle
+\vspace{-0.8em}
+\hrule
+\vspace{1.0em}
+
+% Recommended line spacing: slightly tighter than 1.5 but more airy than single
+\setlength{\parskip}{0.6\baselineskip}
+
+\section*{General Modular Framework and how to run the files on local machine}
+We integrated the two files, computing topological similarity and dynamic comparison, into a single automated workflow, \textit{runall.py}. This script takes two network files (in \textit{.kgml} or \textit{.csv}) as input and runs both persistence and dynamic analyses. For all the uses one can type python \textit{runall.py} to see the help.
+\begin{figure}[H]
+    \centering
+    % replace with your image filename; \imgfile keeps special characters safe
+    \includegraphics[width=1\linewidth]{Screenshot 2025-10-18 190034.png}}
+    % caption intentionally left minimal
+\end{figure}
+To run the files on your local machine, clone this repository \href{https://github.com/RaunakNarwal735/Persistent-Homology}{here}, then run the following commands on your command prompt.
+\begin{verbatim}
+.venv\scripts\activate
+pip install -r requirements.txt
+python run_all.py --graphA --graphB --outdir
+\end{verbatim}
+\section*{Improving the Dynamic Comparison framework}
+Our current dynamic comparison framework provides a simplistic functional baseline for simulating and comparing the behavior of two networks, it makes several simplifying assumptions that could limit its biological realism, current limitations include simplified reaction kinetics, all our reactions are currently happening with a rate constant of 1, assuming uniform first order kinetics, this oversimplifies the system. Incomplete Stoichiometry representation, each reaction decreases substrate concentration and increase the product concentration by one unit, ignoring actual coefficients and multi substrate interactions. Another drawback of current workflow is that the framework aligns species solely by index order rather than by name or KEGG ID, which can produce misleading comparisons. \\
+Some of the planned improvements inculde incorporating proper mass action and kinetics by parsing kinetic constants and rate laws from KGML or any external parameter file. Construct a full stoichiometric matrix that supports reactions of multiple substrates and products and that matches and compares only common species between networks based on KEGG IDs or names to ensure valid comparisons.\\
+\textbf{Pipeline Changes} \\
+The refactored script now has a clear and modular design to imrpove debugging and future expansions. Stoichiometry is now fully supported by the KGML stoichiometry attribute, encoded into a proper matrix and reaction rates now follow mass action kinetics, replacing the previous assumptions. Parameter handling is made optional, monte carlo runs for robustness analysis. Species matching is improved by aligning either KEGG IDs or names of species, preventing misaligned trajectory comparisons. CLI is improved to contain following flags \\
+\begin{verbatim}
+    --params FILE
+    --tmax Max simulation time
+    --npoints Number of time points
+    --method ODE solver (RK45, BDF)
+    --steady_threshold Stop early if system reaches steady state
+    --mc Monte Carlo runs for averaging
+    --atol, --rtol solver tolerances
+\end{verbatim}
+\textbf{Results and Comparison with previous framework}
+We compared map00400 and map00900 pathways with our updated dynamic comparison framework, the overall similarity metrics remained in the same range as previous, which suggests that underlying stoichiometry and reaction connectivity dominate the network dynamics more stongly than the kinetic form. The new framework shows a \textbf{DTW avergae of 6.2, MSE average of 2.14 and correlation average of 0.13, compared to 5.07 , 0.33 and 0.19 in the earlier version}. This increase in the averages reflects a higher dynamic distance, likely due to changes in the numerical solving percision and improved stoichiometric parsing. \\
+Some compounds \textit{(cpd:C00279, cpd:C00251, cpd:C00108)} maintained consistent patterns, with correlations above 0.9, which indicates that both frameworks capture the same trajectory trends despite numeric differences. \textit{cpd:C00279 (ATP), cpd:C00944, cpd:C00493, and cpd:C03175} maintained strong positive correlations and low DTW/MSE values, which indicates that these species evolve in a similar temporal pattern across both the maps. These "similar acting" compunds likey corresponds to shared metabolic intermediates that play central role across pathways.  This consistency of thheir trajectories suggests that the two network preserve common flux dynamics through these metabolites. Negative correlated species \textit{(cpd:C00119, cpd:C00108, cpd:C00251)} indicate opposite flux trends between the networks, which tells pathway specific consumption or accumulation patterns. This often emerges because when some same metabolite serves distinct functions in separate systems, as a substrate in one map but a product in another. \\
+\textbf{Comparaing graphs and charts}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20250907_152422/dynamics_net1.png}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20251023_141937/dynamics_net1.png}}
+    \end{minipage}
+    
+\end{figure}
+The improved framework only plots the common trajectories, this trajectory chart shows how concentrations of different compounds change over time. This is not comparing the two maps, it is the comparison of \textit{map00400} trajectories plotted using two diffrent dynamic frameworks. Same for\textit{ map00900} is given below.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20250907_152422/dynamics_net2.png}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20251023_141937/dynamics_net2.png}}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20250907_152422/overlay.png}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20251023_141937/overlay.png}}
+    \end{minipage}
+\end{figure}
+The Overlay of Trajectories seems very different, because the previous framework shows overlay of first 10 species index views, while new framework plots all the common species calculated by taking intersection of the KEGGIDs and then sorting the list out.
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20250907_152422/similarity_dtw.png}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20251023_141937/similarity_dtw.png}}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20250907_152422/similarity_mse.png}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20251023_141937/similarity_mse.png}}
+    \end{minipage}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20250907_152422/similarity_corr.png}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{\imgfile{20251023_141937/similarity_corr.png}}
+    \end{minipage}
+\end{figure}
+DTW measures the similarity between two temporal sequences which may vary in speed, MSE quantifies the average squared difference between corresponding points in two trajectories, while correlation assesses the strength and direction of a linear relationship between them. All three metrics together provide a comprehensive view of how similarly the species behave over time in the two networks.
+A low DTW score indicates that the two species follow similar shapes even if one is behind the other in reaching equilibrium. A lower RMSE means that the two species are comparable in concentrations over time and a correlation near 1 indicates both species rise and fall together suggesting similar regulation or flux direction. \\
+
+\textbf{Michaelis Menten Kinetics}\\
+Michaelis-Menten kinetics is a model describing how the rate of an enzyme-catalyzed reaction depends on the substrate concentration. It assumes a reversible reaction where an enzyme and a substrate form a temporary complex, which then turns into a product.
+The Michaelis-Menten kinectics is not included in the current implementation because of several reasons. It does not yet produce a measurable difference from the mass action model because reactions are using default k = 1 as rate constants are not provided with the .KGML files. Only a few XML files contain rate constants, seeing this we can think of some ways to calculate rate constants or take them up from some other website.
+The saturation constant is given as \( K_m = 1.0 \). Without experimentally determined or 
+literature-derived parameters, the Michaelis term
+
+\[
+v = \frac{V_{\text{max}} [S]}{K_m + [S]}
+\]
+
+reduces to near-linear behavior when \( [S] \approx K_m \), mimicking the mass-action rate law.
+In real biochemical systems, \( V_{\text{max}} \) and \( K_m \) are enzyme-specific constants that define catalytic capacity. It is typically obtained from enzyme kinetics experiments, database values ( for example BRENDA, SABIO-RK) or parameter estimation via model fitting against time series metabolomics data (measurement and analysis of all small-molecule metabolites produced by metabolism within biological samples).
+Thus k = 1 is a placeholder, it acts like a neutral scaling factor to maintain numeric stability, it presevers network topology, it allows for dynamic comparison without requiring unkown biochemical dat.
+The Monte Carlo runs are also producing the same results because intial conditions and parameters are all the same. MC becomes functionally meanigfull when perturbations like random scaling and kinectic constants are introduced to evaluate robustness and sensitivity of dynamic similarity metrics.
+\textbf{Estimating rate constants} \\
+We can try to make our framework more biologically relevant by estimating rate constants using some approaches such as using computational parameter estimation methods, this might be time taking and maybe the trade off isn't fruitfull enough, so we will take estimating rate constant as an agenda point for future reports.
+One common approach is to fit the reaction model to avaible reaction data for metabolite concentrations over time by minimizing the error between the simulations and observed data points, using nonlinear least squares or global optimization. If we do no have direct experimental data for a map, then ballpark estimates may be taken from related literature.
+\textbf{Introducing animations for better visualisation} \\
+
+\section*{Theorising digital organisms}
+
+
+\vfill
+\noindent{\small Generated: \today}
+
+\end{document}
