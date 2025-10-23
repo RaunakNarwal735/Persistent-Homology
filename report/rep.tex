@@ -51,12 +51,12 @@
 \postdate{\end{center}}
 
 \title{\textit{Biweekly Report 3 }\\[0.5em]
-Improving the dynamic comparison framework, expanding upon the ideas discussed in biweekly report 2 and theorising digital organisms}
+Improving the dynamic comparison framework and theorising digital organisms}
 \author{Raunak Narwal\\
 Department of Mathematical Sciences \\
 Indian Institute of Science Education and Research, Mohali, 130406, Punjab}
 
-\date{ October 18, 2025}
+\date{ October 24, 2025}
 
 % Section spacing and look
 \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
@@ -294,7 +294,37 @@ Development of such a system would take so much compute and time, the OpenWorm p
     \includegraphics[width=1\linewidth]{worm.png}}
 \end{figure}
 So our system DIOR would be a very simplistic organism taking decisions based on certain chemical reaction networks, the system would need a 2D world grid with energy resources for example vritual sun that periodically adds energy and a way to let DIOR eat resources (.txt files in our case). Many digital life platforms treat CPU time as energy, for example in Avida system each organism gets CPU cycle to runs its individual code and performing tasks yield extra cycle to run, anaologous to metabolizing food. We can simply credit DIOR with energy points when it ingests a text file. Another feature can be penalizing damage, for example if it runs out of energy or collides then it dies or loses health points. We can include asexual reporduction once DIOR reaches certain enrgy points. Our model needs to simple and complex at the same time, for example DIOR eats .txt files then it itself gets stored as a .txt file (or JSON/.cvs as there are more code friendly) so that it can be eaten up by its descendants when no other .txt file is available. We need to have just the necessary variables, to simulate full isolation and behaviour of DIOR.\\
+I am not too optimistic about this idea but we would try to do something experimental with the next biweekly report.
+\section*{Discussion and Future Work}
+In this report we have improved our dynamic comparison framework and took a step towards something fun and exciting, an inside the screen organism. This idea is fun because its make us seat on the god seat, the creator's seat. But we still have some pending work from previous weekly reports and future improvements on this report as well.
+Our working code now can handle any two kgml files and output persistence diagram, graph maps, dynamic comparison metrics, overlay graphs and animated visualizations. However, there are still several avenues for further enhancement and validation:
+\begin{itemize}
+    \item Implementing proper parameter estimation methods to calculate rate constants from literature or related databases to increase biological realism of dynamic simulations.
+    \item Expanding the dynamic comparison framework to include stochastic simulation algorithms (e.g., Gillespie) to capture intrinsic noise in biochemical networks.
+    \item Writing more theory and Developing  DIOR (digital organism) prototype using simplified CRNs and energy/resource management within a 2D grid environment.
+    \item Agenda items of biweekly report 2 (comparing permutations
+    of the KGML files using API of KEGG databases or easier version of this
+    could be , we can save 100s of KGML files in a specific folder, than our script compares
+    these 100 files with each other that would be 4950 comparisons, and return to us just those
+    files that fit our criteria of similarity.) and others listed in Biweely Report 2.
+\end{itemize}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+        Event & Timeline \\
+        Biweekly Report 1 & 21 August  \\
+        Biweekly Report 1.1 &  25 August \\
+        Mid semester exams &  1-2 September \\
+        Biweekly Report 2 & \sout{3 September} 7 September  \\
+        Mid semester exams &  \sout{3 September}  10 September  \\
+        Awaiting Feedback &   September-October \\
+        Mid semester II exams &    10-16 October \\
+        Biweekly Report 3 &  \sout{21 September} 24 October  \\
+        Biweekly Report 4 & 7 November \\
 
+    \end{tabular}
+    \label{tab:placeholder}
+\end{table}
 \vfill
 \noindent{\small Generated: \today}
 
