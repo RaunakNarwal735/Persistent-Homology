@@ -53,8 +53,7 @@ def parse_kgml(kgml_file):
 
     species_list = sorted(list(species_map.keys()))
     return species_list, reactions, species_map
-
-# ---------------------------- Parameter handling ----------------------------
+#break little 30 mintues
 
 def load_params(params_path):
     
@@ -70,8 +69,7 @@ def load_params(params_path):
         for _, row in df.iterrows():
             params['reactions'][str(row['reaction_id'])] = {'k': float(row['k']), 'type': row.get('type', 'massaction')}
         return params
-
-# ---------------------------- ODE system builder ----------------------------
+#3
 
 def build_ode_system(species_list, reactions, params=None, default_k=1.0):
    
@@ -122,14 +120,14 @@ def build_ode_system(species_list, reactions, params=None, default_k=1.0):
                     v[j] = info['k'] * prod
             else:
                 # placeholder for other kinetics (e.g., michaelis-menten)
-                # implementers can extend by adding cases here
+                
                 v[j] = info['k']
         dxdt = S.dot(v)
         return dxdt
 
     return odes, species_index, reaction_info
 
-# ---------------------------- Simulation utilities ----------------------------
+# Single simulation
 
 def simulate(species_list, reactions, params=None, t_span=(0, 20), n_points=200, method='RK45', atol=1e-6, rtol=1e-3, steady_threshold=None):
     
@@ -220,8 +218,7 @@ def compute_similarity(y1, y2):
         'mse': mse_scores,
         'corr': corr_scores
     }
-
-# ---------------------------- Plotting ----------------------------
+#
 
 def save_plot(fig, path):
     fig.tight_layout()
@@ -419,8 +416,7 @@ def main():
     pos1 = nx.spring_layout(G1, seed=42)  # compute layout once
     animate_network_polished_v3(G1, s1, reaction_info1, t1, y1_mean, pos1,
                             save_path=os.path.join(run_dir, 'network1.mp4'))
-
-# ---------------- Network 2 ----------------
+# Network 2
     _, _, reaction_info2 = build_ode_system(s2, r2, params=params)
     G2 = build_network_graph(s2, reaction_info2, map2)
     pos2 = nx.spring_layout(G2, seed=42)  # separate layout for network 2
