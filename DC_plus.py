@@ -37,11 +37,11 @@ def parse_kgml(kgml_file):
     reactions = []
     for reaction in root.findall('reaction'):
         rid = reaction.get('id', None)
-        # Attempt to read substrates/products and possible stoichiometry attributes
+        
         subs = []
         for s in reaction.findall('substrate'):
             sid = s.get('id')
-            # KGML doesn't always include stoichiometry; default to 1
+            
             sto = float(s.get('stoichiometry', 1.0)) if s.get('stoichiometry') else 1.0
             subs.append((sid, sto))
         prods = []
@@ -63,7 +63,7 @@ def load_params(params_path):
         with open(params_path) as f:
             return json.load(f)
     else:
-        # Try CSV
+        
         df = pd.read_csv(params_path)
         params = {'reactions': {}, 'default_k': None}
         for _, row in df.iterrows():
@@ -77,7 +77,7 @@ def build_ode_system(species_list, reactions, params=None, default_k=1.0):
     species_index = {s: i for i, s in enumerate(species_list)}
     m = len(reactions)
 
-    # Stoichiometric matrix (n x m)
+    
     S = np.zeros((n, m))
     for j, rx in enumerate(reactions):
         for sid, sto in rx['substrates']:
@@ -87,7 +87,7 @@ def build_ode_system(species_list, reactions, params=None, default_k=1.0):
             if pid in species_index:
                 S[species_index[pid], j] += sto
 
-    # Reaction parameter list (k, type, substrates list (indices), products list)
+    
     reaction_info = []
     params = params or {}
     reaction_params = params.get('reactions', {}) if isinstance(params, dict) else {}
@@ -104,18 +104,18 @@ def build_ode_system(species_list, reactions, params=None, default_k=1.0):
         reaction_info.append({'id': rid, 'k': float(k), 'type': rtype, 'substrate_idxs': substrate_idxs, 'product_idxs': product_idxs, 'sto_subs': sto_subs})
 
     def odes(t, x):
-        # Compute reaction velocities v (length m)
+        
         v = np.zeros(m)
         for j, info in enumerate(reaction_info):
             if info['type'] == 'massaction':
                 if len(info['substrate_idxs']) == 0:
-                    # zero-order or constant rate
+                    
                     v[j] = info['k']
                 else:
-                    # mass-action: k * prod([x_i ** sto_i])
+                    
                     prod = 1.0
                     for idx, sto in zip(info['substrate_idxs'], info.get('sto_subs', [1]*len(info['substrate_idxs']))):
-                        # protect against negative/zero
+                        
                         prod *= max(x[idx], 0.0) ** sto
                     v[j] = info['k'] * prod
             else:
@@ -127,7 +127,7 @@ def build_ode_system(species_list, reactions, params=None, default_k=1.0):
 
     return odes, species_index, reaction_info
 
-# Single simulation
+
 
 def simulate(species_list, reactions, params=None, t_span=(0, 20), n_points=200, method='RK45', atol=1e-6, rtol=1e-3, steady_threshold=None):
     
@@ -149,7 +149,7 @@ def simulate(species_list, reactions, params=None, t_span=(0, 20), n_points=200,
     while t_current < tmax:
         t_next = min(t_current + dt_chunk, tmax)
         sol = solve_ivp(odes, (t_current, t_next), x_current, method=method, atol=atol, rtol=rtol, t_eval=np.linspace(t_current, t_next, max(2, int(n_points * (t_next - t_current) / (tmax - t0)))))
-        # append excluding first point to avoid duplicates
+        
         for tt, xx in zip(sol.t[1:], sol.y.T[1:]):
             t_all.append(tt)
             y_all.append(xx.copy())
@@ -162,21 +162,21 @@ def simulate(species_list, reactions, params=None, t_span=(0, 20), n_points=200,
         x_current = y_all[-1].copy()
     return np.array(t_all), np.vstack(y_all).T
 
-# Monte Carlo wrapper
+
 def simulate_mc(species_list, reactions, params=None, t_span=(0, 20), n_points=200, method='RK45', mc_runs=1, init_scale=0.1, **kwargs):
     
     runs = []
     for i in range(mc_runs):
         t, y = simulate(species_list, reactions, params=params, t_span=t_span, n_points=n_points, method=method, **kwargs)
         runs.append((t, y))
-    # align time grids by choosing the smallest common set (simple strategy: take first run's grid)
+    
     t_ref = runs[0][0]
     Ys = np.stack([np.interp(t_ref, r[0], r[1]) if (len(r[0]) != len(t_ref) or not np.allclose(r[0], t_ref)) else r[1] for r in runs], axis=2)
     y_mean = np.mean(Ys, axis=2)
     return t_ref, y_mean, runs
 #
 def normalize_rows(y):
-    # avoid division by zero
+   
     mx = np.max(y, axis=1, keepdims=True)
     mx[mx == 0] = 1.0
     return y / mx
@@ -191,7 +191,7 @@ def compute_similarity(y1, y2):
 
     dtw_scores, mse_scores, corr_scores = [], [], []
     for i in range(n):
-        # DTW (on normalized)
+        
         try:
             dtw_scores.append(dtw.distance(y1n[i], y2n[i]))
         except Exception:
@@ -235,7 +235,7 @@ def build_network_graph(species_list, reaction_info, species_map=None):
     for sid in species_list:
         G.add_node(sid)
     
-    # Add edges from reaction_info (using substrate_idxs and product_idxs)
+    
     for rx in reaction_info:
         for s_idx in rx['substrate_idxs']:
             for p_idx in rx['product_idxs']:
@@ -251,14 +251,14 @@ def animate_network_polished_v3(G, species_list, reaction_info, t, y, pos, save_
     
     fig, ax = plt.subplots(figsize=(16, 12))  
 
-    # Fixed color gradient for nodes
+    
     palette = sns.color_palette("rocket", n_colors=len(species_list))
     node_color_map = {sid: palette[i] for i, sid in enumerate(species_list)}
 
-    # Node size base (to make small nodes visible)
+    
     base_node_size = 400
 
-    # Prepare frames
+    
     total_frames = len(t)
     fps = 30
     skip = max(1, total_frames // (duration_sec * fps))
@@ -273,7 +273,7 @@ def animate_network_polished_v3(G, species_list, reaction_info, t, y, pos, save_
         node_sizes = base_node_size + 5000 * y[:, frame]
         node_colors = [node_color_map[sid] for sid in species_list]
 
-        # Edge thickness proportional to reaction rates
+        
         edge_widths = []
         for u, v, d in G.edges(data=True):
             rx_id = d['reaction_id']
@@ -285,16 +285,16 @@ def animate_network_polished_v3(G, species_list, reaction_info, t, y, pos, save_
                     rate = info['k']
                     for idx, sto in zip(info['substrate_idxs'], info.get('sto_subs', [1]*len(info['substrate_idxs']))):
                         rate *= max(y[idx, frame], 0.0) ** sto
-                edge_widths.append(1 + 5 * rate)  # scale multiplier if needed
+                edge_widths.append(1 + 5 * rate)  
             else:
                 edge_widths.append(1.0)
 
-        # Draw nodes and edges
+        
         nx.draw_networkx_nodes(G, pos, node_size=node_sizes,
                                node_color=node_colors, ax=ax)
         nx.draw_networkx_edges(G, pos, width=4, edge_color='Black', ax=ax)
 
-        # Optional: title
+        
         ax.set_title(f'Metabolic Network Dynamics  = {t[frame]:.2f}',
                      fontsize=18)
         ax.axis('off')
@@ -353,7 +353,7 @@ def plot_bar(scores, species, metric, save_path):
     plt.title(f'Per-species dynamic similarity ({metric})')
     save_plot(fig, save_path)
 
-# ---------------------------- CLI / main ----------------------------
+
 
 def main():
     parser = argparse.ArgumentParser(description='Improved dynamic KGML network comparison')
@@ -383,11 +383,11 @@ def main():
         logging.error('Failed to parse KGML files: %s', e)
         sys.exit(1)
 
-    # match species by KEGG id (intersection)
+    
     common = sorted(list(set(s1) & set(s2)))
     if len(common) == 0:
         logging.warning('No species in common by KEGG id; attempting to match by name')
-        # attempt name-based match
+        
         names1 = {v: k for k, v in map1.items()}
         names2 = {v: k for k, v in map2.items()}
         common_names = set(names1.keys()) & set(names2.keys())
@@ -397,29 +397,28 @@ def main():
         logging.error('No common species found between the two networks. Aborting comparison.')
         sys.exit(1)
 
-    # simulate each network (Monte Carlo optional)
+   
     t1, y1_mean, runs1 = simulate_mc(s1, r1, params=params, t_span=(0, args.tmax), n_points=args.npoints, method=args.method, mc_runs=args.mc, steady_threshold=args.steady_threshold, atol=args.atol, rtol=args.rtol)
     t2, y2_mean, runs2 = simulate_mc(s2, r2, params=params, t_span=(0, args.tmax), n_points=args.npoints, method=args.method, mc_runs=args.mc, steady_threshold=args.steady_threshold, atol=args.atol, rtol=args.rtol)
 
-    # Extract only common species in the order of 'common'
+    
     idx1 = [s1.index(cid) for cid in common]
     idx2 = [s2.index(cid) for cid in common]
     y1_common = y1_mean[idx1]
     y2_common = y2_mean[idx2]
     species_names = [map1[cid] for cid in common]
 
-    # Save plots
-# Network 1
+   
    
     _, _, reaction_info1 = build_ode_system(s1, r1, params=params)
     G1 = build_network_graph(s1, reaction_info1, map1)
-    pos1 = nx.spring_layout(G1, seed=42)  # compute layout once
+    pos1 = nx.spring_layout(G1, seed=42) 
     animate_network_polished_v3(G1, s1, reaction_info1, t1, y1_mean, pos1,
                             save_path=os.path.join(run_dir, 'network1.mp4'))
-# Network 2
+
     _, _, reaction_info2 = build_ode_system(s2, r2, params=params)
     G2 = build_network_graph(s2, reaction_info2, map2)
-    pos2 = nx.spring_layout(G2, seed=42)  # separate layout for network 2
+    pos2 = nx.spring_layout(G2, seed=42)  
     animate_network_polished_v3(G2, s2, reaction_info2, t2, y2_mean, pos2,
                             save_path=os.path.join(run_dir, 'network2.mp4'))
 
@@ -437,7 +436,7 @@ def main():
     plot_bar(results['mse'], species_names, 'MSE', os.path.join(run_dir, 'similarity_mse.png'))
     plot_bar(results['corr'], species_names, 'Correlation', os.path.join(run_dir, 'similarity_corr.png'))
 
-    # Save structured JSON
+    
     summary = {
         'file1': os.path.abspath(args.file1),
         'file2': os.path.abspath(args.file2),
