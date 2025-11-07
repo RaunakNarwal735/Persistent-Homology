@@ -18,7 +18,8 @@ import pandas as pd
 from copy import deepcopy
 from matplotlib.animation import FuncAnimation
 sns.set_theme(style="whitegrid", context="talk")
-
+import random
+import math
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 
@@ -54,6 +55,38 @@ def parse_kgml(kgml_file):
     species_list = sorted(list(species_map.keys()))
     return species_list, reactions, species_map
 #break little 30 mintues
+def parse_sbml(sbml_file):
+    tree = ET.parse(sbml_file)
+    root = tree.getroot()
+    ns = {'sbml': 'http://www.sbml.org/sbml/level2/version4'}
+    species_elems = root.findall('.//sbml:listOfSpecies/sbml:species', ns)
+    species_list = [s.get('id') for s in species_elems]
+    reactions_elems = root.findall('.//sbml:listOfReactions/sbml:reaction', ns)
+    reactions = []
+    for r in reactions_elems:
+        rid = r.get('id')
+        subs = []
+        for s in r.findall('.//sbml:listOfReactants/sbml:speciesReference', ns):
+            sid = s.get('species')
+            sto = float(s.get('stoichiometry', '1'))
+            subs.append((sid, sto))
+        prods = []
+        for p in r.findall('.//sbml:listOfProducts/sbml:speciesReference', ns):
+            pid = p.get('species')
+            sto = float(p.get('stoichiometry', '1'))
+            prods.append((pid, sto))
+        reactions.append({'id': rid, 'substrates': subs, 'products': prods})
+    return species_list, reactions
+
+def parse_auto(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        first_kb = f.read(2048)
+    if '<kgml' in first_kb.lower() or 'pathway' in first_kb.lower():
+        return parse_kgml(file_path)
+    elif '<sbml' in first_kb.lower():
+        return parse_sbml(file_path)
+    else:
+        raise ValueError("Unrecognized file type: not KGML or SBML")
 
 def load_params(params_path):
     
@@ -161,6 +194,187 @@ def simulate(species_list, reactions, params=None, t_span=(0, 20), n_points=200,
         t_current = t_next
         x_current = y_all[-1].copy()
     return np.array(t_all), np.vstack(y_all).T
+
+def simulate_gillespie(species_list, reactions, params=None, t_max=50.0, max_events=100000, init_counts=None, rng_seed=None):
+    n = len(species_list)
+    species_index = {sid: i for i, sid in enumerate(species_list)}
+    if init_counts is None:
+        X = np.full(n, 50, dtype=int)
+    else:
+        X = np.array(init_counts, dtype=int)
+    rate_dict = {r['id']: params.get(r['id'], 1.0) if params else 1.0 for r in reactions}
+    updates = []
+    for r in reactions:
+        dx = np.zeros(n, dtype=int)
+        for sid, sto in r['substrates']:
+            dx[species_index[sid]] -= int(sto)
+        for pid, sto in r['products']:
+            dx[species_index[pid]] += int(sto)
+        updates.append(dx)
+    if rng_seed is not None:
+        random.seed(rng_seed)
+        np.random.seed(rng_seed)
+    t = 0.0
+    times = [t]
+    states = [X.copy()]
+    events = 0
+    while t < t_max and events < max_events:
+        props = []
+        for r in reactions:
+            k = rate_dict[r['id']]
+            a = k
+            for sid, sto in r['substrates']:
+                idx = species_index[sid]
+                count = X[idx]
+                if count < sto:
+                    a = 0.0
+                    break
+                if sto == 1:
+                    a *= count
+                else:
+                    ff = 1
+                    for s in range(int(sto)):
+                        ff *= (count - s)
+                    a *= ff
+            props.append(a)
+        a0 = sum(props)
+        if a0 <= 0:
+            break
+        r1, r2 = random.random(), random.random()
+        tau = -math.log(r1) / a0
+        cumsum = np.cumsum(props)
+        j = np.searchsorted(cumsum, r2 * a0)
+        X = X + updates[j]
+        t += tau
+        times.append(t)
+        states.append(X.copy())
+        events += 1
+    return np.array(times), np.vstack(states).T
+
+
+NA_CONST = 6.02214076e23
+
+def concs_to_counts(x_conc, volume_l):
+    scale = NA_CONST * volume_l
+    return np.maximum(0, np.round(x_conc * scale).astype(int))
+
+def counts_to_concs(x_counts, volume_l):
+    return x_counts / (NA_CONST * volume_l)
+
+def convert_k_ode_to_k_ssa(reaction_info, volume_l):
+    scale = NA_CONST * volume_l
+    k_ssa = {}
+    for r in reaction_info:
+        order = sum(r.get('sto_subs', [1]*len(r.get('substrate_idxs', []))))
+        if order <= 1:
+            k_ssa[r['id']] = float(r['k'])
+        else:
+            k_ssa[r['id']] = float(r['k']) / (scale ** (order - 1))
+    return k_ssa
+
+NA_CONST = 6.02214076e23
+
+def estimate_volume_for_target_events(species_list, reaction_info, params=None,
+                                      x0_conc=None, t_span=(0.0, 20.0), target_events=2000,
+                                      min_volume=1e-21, max_volume=1e-9):
+    if x0_conc is None:
+        x0_conc = np.ones(len(species_list), dtype=float)
+    A_per_S = 0.0
+    for r in reaction_info:
+        k_ode = float(r.get('k', 1.0))
+        sto_idxs = r.get('substrate_idxs', [])
+        sto_vals = r.get('sto_subs', [1]*len(sto_idxs))
+        prod_term = 1.0
+        if len(sto_idxs) == 0:
+            prod_term = 1.0
+        else:
+            for idx, sto in zip(sto_idxs, sto_vals):
+                conc = float(x0_conc[idx]) if idx < len(x0_conc) else 0.0
+                prod_term *= (conc ** float(sto))
+        A_per_S += k_ode * prod_term
+    if A_per_S <= 0:
+        return 1e-15
+    t0, t1 = float(t_span[0]), float(t_span[1])
+    total_time = max(1e-12, t1 - t0)
+    target_rate = float(target_events) / total_time
+    S_required = target_rate / A_per_S
+    V_required = float(S_required) / NA_CONST
+    if V_required < min_volume:
+        V_clamped = min_volume
+    elif V_required > max_volume:
+        V_clamped = max_volume
+    else:
+        V_clamped = V_required
+    return V_clamped
+
+def gillespie_setup_diagnostics(species_list, reactions, params, volume_l, n_sample=5, x0_conc=None):
+    odes, species_index, reaction_info = build_ode_system(species_list, reactions, params)
+    if x0_conc is None:
+        x0_conc = np.ones(len(species_list))
+    init_counts = concs_to_counts(x0_conc, volume_l)
+    rate_dict = convert_k_ode_to_k_ssa(reaction_info, volume_l)
+    sample_rates = list(rate_dict.items())[:min(n_sample, len(rate_dict))]
+    n_species = len(species_list)
+    n_reactions = len(reactions)
+    diagnostics = {
+        'n_species': n_species,
+        'n_reactions': n_reactions,
+        'init_counts_sample': init_counts[:min(10, n_species)].tolist(),
+        'rate_sample': [(rid, float(k)) for rid, k in sample_rates],
+    }
+    props_preview = []
+    X = init_counts.copy()
+    for r in reactions[:min(10, len(reactions))]:
+        k = rate_dict.get(r['id'], 0.0)
+        a = k
+        for sid, sto in r['substrates']:
+            idx = species_index[sid]
+            count = X[idx]
+            if count < sto:
+                a = 0.0
+                break
+            if sto == 1:
+                a *= count
+            else:
+                ff = 1
+                for s in range(int(sto)):
+                    ff *= (count - s)
+                a *= ff
+        props_preview.append(float(a))
+    diagnostics['props_preview'] = props_preview
+    diagnostics['sum_props_preview'] = float(sum(props_preview))
+    return diagnostics
+def simulate_gillespie_mc_auto(species_list, reactions, params=None, t_span=(0,50), n_points=200, mc_runs=20,
+                               volume_l=None, x0_conc=None, target_events=2000, debug=True):
+    odes, species_index, reaction_info = build_ode_system(species_list, reactions, params)
+    if x0_conc is None:
+        x0_conc = np.ones(len(species_list))
+    if volume_l is None:
+        vol = estimate_volume_for_target_events(species_list, reaction_info, params=params,
+                                                x0_conc=x0_conc, t_span=t_span, target_events=target_events)
+    else:
+        vol = float(volume_l)
+    diag = gillespie_setup_diagnostics(species_list, reactions, params, vol, x0_conc=x0_conc)
+    if debug:
+        logging.info("Gillespie setup diagnostics: n_species=%d n_reactions=%d", diag['n_species'], diag['n_reactions'])
+        logging.info(" init_counts_sample: %s", diag['init_counts_sample'])
+        logging.info(" rate_sample (first few): %s", diag['rate_sample'])
+        logging.info(" props_preview (first few reactions): %s sum=%.4e", diag['props_preview'], diag['sum_props_preview'])
+        logging.info(" chosen volume_l = %.4e L", vol)
+    t_ref = np.linspace(t_span[0], t_span[1], n_points)
+    Ys = []
+    for i in range(mc_runs):
+        t, X = simulate_gillespie(species_list, reactions, params=convert_k_ode_to_k_ssa(reaction_info, vol),
+                                  t_max=t_span[1], init_counts=concs_to_counts(x0_conc, vol), rng_seed=i)
+        X_conc = counts_to_concs(X, vol)
+        if len(t) < 2:
+            logging.warning("SSA run produced <2 time points; len(t)=%d. This indicates no events; consider increasing volume or rate constants.", len(t))
+        Y_interp = np.array([np.interp(t_ref, t, X_conc[j].astype(float)) for j in range(X_conc.shape[0])])
+        Ys.append(Y_interp)
+    Ys = np.stack(Ys, axis=2)
+    mean = Ys.mean(axis=2)
+    std = Ys.std(axis=2)
+    return t_ref, mean, std, Ys
 
 
 def simulate_mc(species_list, reactions, params=None, t_span=(0, 20), n_points=200, method='RK45', mc_runs=1, init_scale=0.1, **kwargs):
@@ -357,13 +571,18 @@ def plot_bar(scores, species, metric, save_path):
 
 def main():
     parser = argparse.ArgumentParser(description='Improved dynamic KGML network comparison')
-    parser.add_argument('file1')
-    parser.add_argument('file2')
+    parser.add_argument('file1', default=None)
+    parser.add_argument('file2', default=None)
+    parser.add_argument('--volume', type=float, default=1e-15,
+                    help='System volume in litres (used for Gillespie conversion)')
+    parser.add_argument('--animate', default=None, help='Do you want animated video')
     parser.add_argument('--params', default=None, help='JSON/CSV with reaction parameters')
     parser.add_argument('--outdir', default='./outputs')
     parser.add_argument('--tmax', type=float, default=20.0)
     parser.add_argument('--npoints', type=int, default=200)
     parser.add_argument('--method', default='RK45')
+    parser.add_argument('--dynamic', choices=['ode', 'gillespie'], default='ode',
+                        help='Choose dynamic model: ode or gillespie')
     parser.add_argument('--atol', type=float, default=1e-6)
     parser.add_argument('--rtol', type=float, default=1e-3)
     parser.add_argument('--steady_threshold', type=float, default=None, help='If set, adaptively stop when change < threshold')
@@ -377,11 +596,22 @@ def main():
     os.makedirs(run_dir, exist_ok=True)
 
     try:
-        s1, r1, map1 = parse_kgml(args.file1)
-        s2, r2, map2 = parse_kgml(args.file2)
+            parsed1 = parse_auto(args.file1)
+            parsed2 = parse_auto(args.file2)
+            if len(parsed1) == 3:
+               s1, r1, map1 = parsed1
+            else:
+               s1, r1 = parsed1
+               map1 = {sid: sid for sid in s1}
+            if len(parsed2) == 3:
+               s2, r2, map2 = parsed2
+            else:
+               s2, r2 = parsed2
+               map2 = {sid: sid for sid in s2}
     except Exception as e:
-        logging.error('Failed to parse KGML files: %s', e)
-        sys.exit(1)
+            logging.error('Failed to parse files: %s', e)
+            sys.exit(1)
+
 
     
     common = sorted(list(set(s1) & set(s2)))
@@ -398,8 +628,32 @@ def main():
         sys.exit(1)
 
    
-    t1, y1_mean, runs1 = simulate_mc(s1, r1, params=params, t_span=(0, args.tmax), n_points=args.npoints, method=args.method, mc_runs=args.mc, steady_threshold=args.steady_threshold, atol=args.atol, rtol=args.rtol)
-    t2, y2_mean, runs2 = simulate_mc(s2, r2, params=params, t_span=(0, args.tmax), n_points=args.npoints, method=args.method, mc_runs=args.mc, steady_threshold=args.steady_threshold, atol=args.atol, rtol=args.rtol)
+    logging.info(f"Running dynamic mode: {args.dynamic.upper()}")
+    if args.dynamic == 'ode':
+        t1, y1_mean, runs1 = simulate_mc(s1, r1, params=params, t_span=(0, args.tmax),
+                                     n_points=args.npoints, method=args.method,
+                                     mc_runs=args.mc, steady_threshold=args.steady_threshold,
+                                     atol=args.atol, rtol=args.rtol)
+        t2, y2_mean, runs2 = simulate_mc(s2, r2, params=params, t_span=(0, args.tmax),
+                                     n_points=args.npoints, method=args.method,
+                                     mc_runs=args.mc, steady_threshold=args.steady_threshold,
+                                     atol=args.atol, rtol=args.rtol)
+    elif args.dynamic == 'gillespie':
+        odes1, idx1, rinfo1 = build_ode_system(s1, r1, params)
+        odes2, idx2, rinfo2 = build_ode_system(s2, r2, params)
+        V1 = estimate_volume_for_target_events(s1, rinfo1, params=params, x0_conc=np.ones(len(s1)), t_span=(0, args.tmax), target_events=2000)
+        V2 = estimate_volume_for_target_events(s2, rinfo2, params=params, x0_conc=np.ones(len(s2)), t_span=(0, args.tmax), target_events=2000)
+        V_shared = float((V1 + V2) / 2.0)
+        logging.info("Estimated volumes V1=%.4e L V2=%.4e L using target_events=2000; using shared V=%.4e L", V1, V2, V_shared)
+        t1, y1_mean, _, _ = simulate_gillespie_mc_auto(s1, r1, params=params, t_span=(0, args.tmax), n_points=args.npoints, mc_runs=max(1, args.mc), volume_l=V_shared, x0_conc=np.ones(len(s1)))
+        t2, y2_mean, _, _ = simulate_gillespie_mc_auto(s2, r2, params=params, t_span=(0, args.tmax), n_points=args.npoints, mc_runs=max(1, args.mc), volume_l=V_shared, x0_conc=np.ones(len(s2)))
+
+    else:
+        logging.error(f"Unknown dynamic mode: {args.dynamic}")
+        sys.exit(1)
+
+
+
 
     
     idx1 = [s1.index(cid) for cid in common]
@@ -413,13 +667,15 @@ def main():
     _, _, reaction_info1 = build_ode_system(s1, r1, params=params)
     G1 = build_network_graph(s1, reaction_info1, map1)
     pos1 = nx.spring_layout(G1, seed=42) 
-    animate_network_polished_v3(G1, s1, reaction_info1, t1, y1_mean, pos1,
+    if args.animate == "yes":
+        animate_network_polished_v3(G1, s1, reaction_info1, t1, y1_mean, pos1,
                             save_path=os.path.join(run_dir, 'network1.mp4'))
 
     _, _, reaction_info2 = build_ode_system(s2, r2, params=params)
     G2 = build_network_graph(s2, reaction_info2, map2)
     pos2 = nx.spring_layout(G2, seed=42)  
-    animate_network_polished_v3(G2, s2, reaction_info2, t2, y2_mean, pos2,
+    if args.animate == "yes":
+        animate_network_polished_v3(G2, s2, reaction_info2, t2, y2_mean, pos2,
                             save_path=os.path.join(run_dir, 'network2.mp4'))
 
 

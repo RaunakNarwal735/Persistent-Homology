@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 24.1) (preloaded format=xelatex 2025.8.22)  24 OCT 2025 01:09
+This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 24.1) (preloaded format=xelatex 2025.8.22)  8 NOV 2025 01:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -839,26 +839,50 @@ Package hyperref Info: Link coloring OFF on input line 80.
 
 Package hyperref Warning: Rerun to get /PageLabels entry.
 
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 9
+3.
+(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 9
+3.
 
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\T1/lmr/bx/n/20.74 Im-prov-ing the dy-namic com-par-i-son
+(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+93.
+
+(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+93.
+
+(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 93.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 93.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 93.
+
+[1
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 118--120
+
  []
 
-File: Screenshot 2025-10-18 190034.png Graphic file (type bmp)
-<Screenshot 2025-10-18 190034.png>
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.96 \end{figure}
-                 
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
 
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 9
-8.
+Underfull \hbox (badness 10000) in paragraph at lines 121--123
+
+ []
+
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+24.
 (C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -866,46 +890,6 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-
-Underfull \hbox (badness 10000) in paragraph at lines 104--108
-
- []
-
-[1
-
-]
-File: 20250907_152422/dynamics_net1.png Graphic file (type bmp)
-<20250907_152422/dynamics_net1.png>
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
-27.
- (C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
-File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-27.
- (C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
-File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-127.
-
-(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
-File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-127.
-
-(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
-File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 127.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 127.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 127.
-File: 20251023_141937/dynamics_net1.png Graphic file (type bmp)
-<20251023_141937/dynamics_net1.png>
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -915,24 +899,51 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [2]
-File: 20250907_152422/dynamics_net2.png Graphic file (type bmp)
-<20250907_152422/dynamics_net2.png>
+File: 20251107_233806/dynamics_net1.png Graphic file (type bmp)
+<20251107_233806/dynamics_net1.png>
+File: 20251023_141937/dynamics_net1.png Graphic file (type bmp)
+<20251023_141937/dynamics_net1.png>
+
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.156 T
+       he left one is gillespie SSA and right one is ODE, both the dynamics ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+File: 20251107_233806/dynamics_net2.png Graphic file (type bmp)
+<20251107_233806/dynamics_net2.png>
 File: 20251023_141937/dynamics_net2.png Graphic file (type bmp)
 <20251023_141937/dynamics_net2.png>
-File: 20250907_152422/overlay.png Graphic file (type bmp)
-<20250907_152422/overlay.png>
+File: 20251107_233806/overlay.png Graphic file (type bmp)
+<20251107_233806/overlay.png>
 File: 20251023_141937/overlay.png Graphic file (type bmp)
 <20251023_141937/overlay.png>
-File: 20250907_152422/similarity_dtw.png Graphic file (type bmp)
-<20250907_152422/similarity_dtw.png>
+File: 20251107_233806/similarity_dtw.png Graphic file (type bmp)
+<20251107_233806/similarity_dtw.png>
 File: 20251023_141937/similarity_dtw.png Graphic file (type bmp)
 <20251023_141937/similarity_dtw.png>
-File: 20250907_152422/similarity_mse.png Graphic file (type bmp)
-<20250907_152422/similarity_mse.png>
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[3]
+File: 20251107_233806/similarity_mse.png Graphic file (type bmp)
+<20251107_233806/similarity_mse.png>
 File: 20251023_141937/similarity_mse.png Graphic file (type bmp)
 <20251023_141937/similarity_mse.png>
-File: 20250907_152422/similarity_corr.png Graphic file (type bmp)
-<20250907_152422/similarity_corr.png>
+File: 20251107_233806/similarity_corr.png Graphic file (type bmp)
+<20251107_233806/similarity_corr.png>
 File: 20251023_141937/similarity_corr.png Graphic file (type bmp)
 <20251023_141937/similarity_corr.png>
 
@@ -943,96 +954,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 200--202
-
- []
-
-! Undefined control sequence.
-<argument> V_{\text 
-                    {max}} [S]
-l.210 v = \frac{V_{\text{max}} [S]}{K_m + [S]}
-                                              
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.214 In real biochemical systems, \( V_{\text
-                                              {max}} \) and \( K_m \) are en...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: s1.png Graphic file (type bmp)
-<s1.png>
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.243 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 213--243
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 213--243
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 213--243
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 213--243
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 213--243
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 213--243
-
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
 [4]
-File: s2.png Graphic file (type bmp)
-<s2.png>
-
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.249 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1040,152 +962,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[5]
-File: s3.png Graphic file (type bmp)
-<s3.png>
-
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.255 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[6]
-File: V1.png Graphic file (type bmp)
-<V1.png>
-
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.263 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-File: V2.png Graphic file (type bmp)
-<V2.png>
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.269 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-File: V3.png Graphic file (type bmp)
-<V3.png>
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.275 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[7]
-Missing character: There is no “ in font ec-lmr12!
-Missing character: There is no ” in font ec-lmr12!
-Missing character: There is no   in font ec-lmr12!
-Missing character: There is no   in font ec-lmr12!
-Missing character: There is no “ in font ec-lmr12!
-Missing character: There is no ” in font ec-lmr12!
-File: save_page-0001.jpg Graphic file (type bmp)
-<save_page-0001.jpg>
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.288 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 278--288
-
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[8]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[9]
-File: worm.png Graphic file (type bmp)
-<worm.png>
-
-! Extra }, or forgotten \endgroup.
-\@endfloatbox ...pagefalse \outer@nobreak \egroup 
-                                                  \color@endbox 
-l.295 \end{figure}
-                  
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 290--295
-
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[10]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[11] (rep.aux)
+[5] (rep.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -1204,12 +981,12 @@ Package rerunfilecheck Info: Checksums for `rep.out':
 (rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 23177 strings out of 409617
- 432666 string characters out of 5772592
+ 23106 strings out of 409617
+ 431574 string characters out of 5772592
  1928191 words of memory out of 5000000
- 44947 multiletter control sequences out of 15000+600000
- 599791 words of font info for 60 fonts, out of 8000000 for 9000
+ 44883 multiletter control sequences out of 15000+600000
+ 608619 words of font info for 63 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 83i,13n,87p,1433b,559s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 83i,12n,87p,1239b,583s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on rep.pdf (11 pages).
+Output written on rep.pdf (5 pages).

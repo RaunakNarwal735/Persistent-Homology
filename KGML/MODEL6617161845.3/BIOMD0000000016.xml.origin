@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml level="2" metaid="_647564" version="1" xmlns="http://www.sbml.org/sbml/level2">
+<model id="Goldbeter1995" metaid="_000001" name="Goldbeter1995_CircClock">
+<annotation>
+   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+      <rdf:Description rdf:about="#_000001">
+          
+<dc:relation>
+<rdf:Bag>
+
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0007623"/>
+
+<rdf:li rdf:resource="http://www.ncbi.nlm.nih.gov/Taxonomy/#7227"/>
+<rdf:li rdf:resource="http://www.genome.jp/kegg/pathway/#dme04710"/>
+
+<rdf:li rdf:resource="http://www.ncbi.nlm.nih.gov/PubMed/#8587874"/>
+</rdf:Bag>
+</dc:relation>
+
+
+<dc:creator rdf:parseType="Resource">
+<rdf:Bag>
+<rdf:li rdf:parseType="Resource">
+<vCard:N rdf:parseType="Resource">
+<vCard:Family>Le Novere</vCard:Family>
+<vCard:Given>Nicolas</vCard:Given>
+</vCard:N>
+<vCard:EMAIL>lenov@ebi.ac.uk</vCard:EMAIL>
+<vCard:ORG>
+<vCard:Orgname>EMBL-EBI</vCard:Orgname>
+</vCard:ORG>
+</rdf:li>
+<rdf:li rdf:parseType="Resource">
+<vCard:N rdf:parseType="Resource">
+<vCard:Family>Shapiro</vCard:Family>
+<vCard:Given>Bruce</vCard:Given>
+</vCard:N>
+<vCard:EMAIL>bshapiro@jpl.nasa.gov</vCard:EMAIL>
+<vCard:ORG>
+<vCard:Orgname>Jet propulsion Laboratory</vCard:Orgname>
+</vCard:ORG>
+</rdf:li>
+</rdf:Bag>
+</dc:creator>
+<dcterms:created rdf:parseType="Resource">
+<dcterms:W3CDTF>2005-06-29T11:17:21</dcterms:W3CDTF>
+</dcterms:created>
+<dcterms:modified rdf:parseType="Resource">
+<dcterms:W3CDTF>2005-06-29T11:33:39</dcterms:W3CDTF>
+</dcterms:modified>
+</rdf:Description>
+      </rdf:RDF>
+    </annotation>
+<listOfUnitDefinitions>
+   <unitDefinition id="substance" metaid="metaid_0000023" name="micromole (default)">
+      <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Default unit of substance redefined to micromole by comparison with the article. Nicolas Le Novere</p>
+         </body>
+      </notes>
+      <listOfUnits>
+         <unit kind="mole" scale="-6"/>
+      </listOfUnits>
+   </unitDefinition>
+   <unitDefinition id="time" metaid="metaid_0000024" name="heure (default)">
+      <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Default unit of time redefined to hour by comparison with the article. Nicolas Le Novere</p>
+         </body>
+      </notes>
+      <listOfUnits>
+         <unit kind="second" multiplier="3600"/>
+      </listOfUnits>
+   </unitDefinition>
+</listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="default" metaid="_741863" size="1e-15"/>
+      
+      <compartment id="CYTOPLASM" metaid="_741901" outside="default" size="1e-15" spatialDimensions="3">
+<annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_741901">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0005737"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</compartment>
+    <compartment constant="true" id="compartment_0000004" metaid="metaid_0000026" name="NUCLEUS" outside="CYTOPLASM" size="1e-15" spatialDimensions="3">
+<annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<rdf:Description rdf:about="#metaid_0000026">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0005634"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</compartment>
+</listOfCompartments>
+    <listOfSpecies>
+      <species boundaryCondition="true" compartment="default" constant="true" id="EmptySet" initialAmount="0" metaid="_741921">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>boundaryCondition changed from default (i.e. false) to true, because EmptySet acts as a reactant. Nicolas Le Novere</p>
+         </body>
+        </notes>
+      </species>
+      <species compartment="CYTOPLASM" id="M" initialConcentration="0.1" metaid="_741942" name="PER mRNA">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Initial condition changed from amount to concentration as per article. Bruce Shapiro</p>
+         </body>
+        </notes>
+      </species>
+      <species compartment="CYTOPLASM" id="P0" initialConcentration="0.25" metaid="_741962" name="unphosphorylated PER">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Initial condition changed from amount to concentration as per article. Bruce Shapiro</p>
+         </body>
+        </notes>
+      <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_741962">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P07663"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="CYTOPLASM" id="P1" initialConcentration="0.25" metaid="_741981" name="monophosphorylated PER">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Initial condition changed from amount to concentration as per article. Bruce Shapiro</p>
+         </body>
+        </notes>
+      <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_741981">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P07663"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="CYTOPLASM" id="P2" initialConcentration="0.25" metaid="_742001" name="biphosphorylated PER">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Initial condition changed from amount to concentration as per article. Bruce Shapiro</p>
+         </body>
+        </notes>
+      <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742001">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P07663"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="compartment_0000004" id="Pn" initialConcentration="0.25" metaid="_742021" name="nuclear PER">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Initial condition changed from amount to concentration as per article. Bruce Shapiro</p>
+         </body>
+        </notes>
+      <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742021">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P07663"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="CYTOPLASM" id="Pt" initialConcentration="1.0" metaid="_742041" name="total PER">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Initial condition changed from amount to concentration as per article. Bruce Shapiro</p>
+             <p>initial concentration for Pt is not used becuase Pt is determined by an Assigment Rule</p>
+         </body>
+        </notes>
+      <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742041">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.uniprot.org/#P07663"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+    </listOfSpecies>
+    <listOfRules>
+      <assignmentRule metaid="metaid_0000025" variable="Pt">
+        <notes>
+         <body xmlns="http://www.w3.org/1999/xhtml">
+           <p>Conversion to number of molecules removed to give result in micromoles.</p>
+           <p>Pn added to formula for consistency with reference. Bruce Shapiro </p>
+         </body>
+        </notes>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+           <apply>
+              <plus/>
+              <ci>P0</ci>
+              <ci>P1</ci>
+              <ci>P2</ci>
+              <ci>Pn</ci>
+           </apply>
+        </math>
+      </assignmentRule>
+    </listOfRules>
+    <listOfReactions>
+      <reaction id="rM" metaid="_742062" name="transcription of PER" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742062">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0009299"/>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006355"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="EmptySet" stoichiometry="0"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Pn"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> default </ci>
+                <ci> Vs </ci>    
+                <apply>
+                  <power/>
+                  <ci> KI </ci>
+                  <ci> n </ci>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <apply>
+                  <power/>
+                    <ci> KI </ci>
+                    <ci> n </ci>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <ci> Pn </ci>
+                    <ci> n </ci>
+                  </apply>
+                </apply>
+            </apply> 
+          </math>
+          <listOfParameters>
+            <parameter id="Vs" value="0.76"/>
+            <parameter id="KI" value="1"/>
+            <parameter id="n" value="4"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rTL" metaid="_742083" name="translation of PER" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742083">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0043037"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="EmptySet" stoichiometry="0"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="P0"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="M"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+                <ci> ks </ci>
+                <ci> M </ci>
+                <ci> default </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="ks" value="0.38"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rP01" metaid="_742102" name="first phosphorylation of PER" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742102">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006468"/>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 2.7.1.37"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="P0"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="P1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                  <ci> CYTOPLASM </ci>
+                  <ci> V1 </ci>
+                  <ci> P0 </ci> 
+              </apply>
+              <apply>
+                <plus/>
+                <ci> K1 </ci>
+                <ci> P0 </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="V1" value="3.2"/>
+            <parameter id="K1" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rP10" metaid="_742122" name="removal of the first PER phosphate" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742122">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006470"/>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 3.1.3.16"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="P1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="P0"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> CYTOPLASM </ci>
+                <ci> V2 </ci>
+                <ci> P1 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> K2 </ci>
+                <ci> P1 </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="V2" value="1.58"/>
+            <parameter id="K2" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rP12" metaid="_742142" name="second phosphorylation of PER" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742142">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006468"/>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 2.7.1.37"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="P1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="P2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> CYTOPLASM </ci>
+                <ci> V3 </ci>
+                <ci> P1 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> K3 </ci>
+                <ci> P1 </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="V3" value="5"/>
+            <parameter id="K3" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rP21" metaid="_742162" name="removal of the second PER phosphate" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742162">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006470"/>
+<rdf:li rdf:resource="http://www.ebi.ac.uk/IntEnz/#EC 3.1.3.16"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="P2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="P1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+               <divide/>
+               <apply>
+                 <times/>
+                 <ci> CYTOPLASM </ci>
+                 <ci> V4 </ci>
+                 <ci> P2 </ci>
+               </apply>
+               <apply>
+                 <plus/>
+                 <ci> K4 </ci>
+                 <ci> P2 </ci>
+               </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="V4" value="2.5"/>
+            <parameter id="K4" value="2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rP2n" metaid="_742182" name="translocation of PER to the nucleus" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742182">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006606"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="P2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Pn"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k1 </ci>
+              <ci> P2 </ci>
+              <ci> CYTOPLASM </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k1" value="1.9"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rPn2" metaid="_742202" name="translocation of PER to the cytoplasm" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742202">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006611"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="Pn"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="P2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k2 </ci>
+              <ci> Pn </ci>
+              <ci> compartment_0000004 </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k2" value="1.3"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rmRNAd" metaid="_742222" name="degradation of PER mRNA" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742222">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0006402"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="M"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet" stoichiometry="0"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> Vm </ci>
+                <ci> M </ci>
+                <ci> CYTOPLASM </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> Km </ci>
+                <ci> M </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="Km" value="0.5"/>
+            <parameter id="Vm" value="0.65"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="rVd" metaid="_742242" name="degradation of PER" reversible="false">
+        <annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#_742242">
+<dc:relation>
+<rdf:Bag>
+<rdf:li rdf:resource="http://www.geneontology.org/#GO:0030163"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+<listOfReactants>
+          <speciesReference species="P2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet" stoichiometry="0"/>
+        </listOfProducts>
+        <kineticLaw>
+          <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">
+             <p>Formula modified to give units of substance/time Bruce Shapiro</p>
+          </body>
+          </notes>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> CYTOPLASM </ci>
+                <ci> Vd </ci>
+                <ci> P2 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> Kd </ci>
+                <ci> P2 </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="Vd" value="1.6"/>
+            <parameter id="Kd" value="0.2"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

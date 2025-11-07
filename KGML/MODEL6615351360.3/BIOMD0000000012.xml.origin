@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml level="2" metaid="_153818" version="1" xmlns="http://www.sbml.org/sbml/level2">
+<model id="repressilator" metaid="_000001" name="Elowitz2000_Repressilator">
+    <notes>
+      
+		<body xmlns="http://www.w3.org/1999/xhtml">
+			<h1>Repressilator: A synthetic oscillatory network of transcriptional 
+			regulators</h1>
+
+			<table border="0" cellpadding="2" cellspacing="0">
+				<thead>
+					<tr>
+						<th align="left" bgcolor="#eeeeee" valign="middle">Citation</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Elowitz MB, Leibler S (2000)
+							 A synthetic oscillatory network of transcriptional regulators.Nature.403 :
+							 335 - 338.
+						<a href="http://www.nature.com/cgi-taf/        DynaPage.taf?file=/nature/journal/v403/n6767/full/403335a0_fs.html">
+							http://
+							www.nature.com/cgi-taf/DynaPage.taf?file=/nature/journal/v403/n6767/full/
+							403335a0_fs.html
+						</a>
+</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<table border="0" cellpadding="2" cellspacing="0">
+				<thead>
+					<tr>
+						<th align="left" bgcolor="#eeeeee" valign="middle">Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							This file describes the repressilator system. The authors of this model (
+							see reference)
+							 use three transcriptional repressor systems that are not part of any natural biological clock to build an oscillating network that they called the repressilator.  The model system was induced in Escherichia coli.In this system,
+							 LacI (variable X is the mRNA,
+							 variable PX is the protein)
+							 inhibits the tetracycline-
+							resistance transposon tetR (Y,
+							 PY describe mRNA and protein)
+							. Protein tetR inhibits the gene Cl from phage Lambda (
+							Z, PZ: mRNA, protein),
+							 and protein Cl inhibits lacI expression. With appropriate parameter values this system oscillates.</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<table border="0" cellpadding="2" cellspacing="0">
+				<thead>
+					<tr>
+						<th align="left" bgcolor="#eeeeee" valign="middle">Rate constant      </th>
+						<th align="left" bgcolor="#eeeeee" valign="middle">Reaction</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>k1 = 1</td>
+						<td>X -&gt; EmptySet</td>
+					</tr>
+					<tr>
+						<td>k1 = 1</td>
+						<td>Y -&gt; EmptySet</td>
+					</tr>
+					<tr>
+						<td>k1 = 1</td>
+						<td>Z -&gt; EmptySet</td>
+					</tr>
+					<tr>
+						<td>K = 1 (hill khalf)</td>
+						<td>PX |-&gt; Y</td>
+					</tr>
+					<tr>
+						<td>K = 1 (hill khalf)</td>
+						<td>PY |-&gt; Z</td>
+					</tr>
+					<tr>
+						<td>K = 1 (hill khalf)</td>
+						<td>PZ |-&gt; X</td>
+					</tr>
+					<tr>
+						<td>n = 2.1 (hill nhill)</td>
+						<td>PX |-&gt; Y</td>
+					</tr>
+					<tr>
+						<td>n = 2.1 (hill nhill)</td>
+						<td>PY |-&gt; Z</td>
+					</tr>
+					<tr>
+						<td>n = 2.1 (hill nhill)</td>
+						<td>PZ |-&gt; X</td>
+					</tr>
+					<tr>
+						<td>{alpha0, alpha} = {0, 250} (hill basalRate)</td>
+						<td>PX |-&gt; Y</td>
+					</tr>
+					<tr>
+						<td>{alpha0, alpha} = {0, 250} (hill basalRate)</td>
+						<td>PY |-&gt; Z</td>
+					</tr>
+					<tr>
+						<td>{alpha0, alpha} = {0, 250} (hill basalRate)</td>
+						<td>PZ |-&gt; X</td>
+					</tr>
+					<tr>
+						<td>alpha1 = 0 (hill vmax)</td>
+						<td>PX |-&gt; Y</td>
+					</tr>
+					<tr>
+						<td>alpha1 = 0 (hill vmax)</td>
+						<td>PY |-&gt; Z</td>
+					</tr>
+					<tr>
+						<td>alpha1 = 0 (hill vmax)</td>
+						<td>PZ |-&gt; X</td>
+					</tr>
+					<tr>
+						<td>beta = 5</td>
+						<td>PX -&gt; EmptySet</td>
+					</tr>
+					<tr>
+						<td>beta = 5</td>
+						<td>PY -&gt; EmptySet</td>
+					</tr>
+					<tr>
+						<td>beta = 5</td>
+						<td>PZ -&gt; EmptySet</td>
+					</tr>
+					<tr>
+						<td>beta = 5</td>
+						<td>X + EmptySet -&gt; PX + X</td>
+					</tr>
+					<tr>
+						<td>beta = 5</td>
+						<td>Y + EmptySet -&gt; PY + Y</td>
+					</tr>
+					<tr>
+						<td>beta = 5</td>
+						<td>Z + EmptySet -&gt; PZ + Z</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table border="0" cellpadding="2" cellspacing="0">
+				<thead>
+					<tr>
+						<th align="left" bgcolor="#eeeeee" valign="middle">Variable</th>
+						<th align="left" bgcolor="#eeeeee" valign="middle">IC  </th>
+						<th align="left" bgcolor="#eeeeee" valign="middle">ODE</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>PX</td>
+						<td>5</td>
+						<td>PX'[t] == -(beta*PX[t]) + beta*X[t]</td>
+					</tr>
+					<tr>
+						<td>PY</td>
+						<td>0</td>
+						<td>PY'[t] == -(beta*PY[t]) + beta*Y[t]</td>
+					</tr>
+					<tr>
+						<td>PZ</td>
+						<td>15</td>
+						<td>PZ'[t] == -(beta*PZ[t]) + beta*Z[t]</td>
+					</tr>
+					<tr>
+						<td>X</td>
+						<td>0</td>
+						<td>X'[t] == alpha0 + (alpha + alpha1*PZ[t]^n)/(K^n +
+							 PZ[t]^n) - k1*X[t]</td>
+					</tr>
+					<tr>
+						<td>Y</td>
+						<td>0</td>
+						<td>Y'[t] == alpha0 + (alpha + alpha1*PX[t]^n)/(K^n +
+							 PX[t]^n) - k1*Y[t]</td>
+					</tr>
+					<tr>
+						<td>Z</td>
+						<td>0</td>
+						<td>Z'[t] == alpha0 + (alpha + alpha1*PY[t]^n)/(K^n +
+							 PY[t]^n) - k1*Z[t]</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>Generated by Cellerator Version 1.0 update 2.1127 using Mathematica 4.2 for 
+				Mac OS X (June 4, 2002), November 27, 2002 12:15:32, using (PowerMac,PowerPC,
+				Mac OS X,MacOSX,Darwin)</p>
+			<p>author=B.E.Shapiro</p>
+
+		</body>
+	
+    </notes>
+        <annotation>
+            <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+                <rdf:Description rdf:about="#_000001">
+                  
+                  <dc:relation>
+                    <rdf:Bag>
+                      <rdf:li rdf:resource="http://www.ncbi.nlm.nih.gov/Taxonomy/#562"/>
+
+
+<rdf:li rdf:resource="http://www.ncbi.nlm.nih.gov/PubMed/#10659856"/>
+</rdf:Bag>
+                  </dc:relation>
+                
+<dc:creator rdf:parseType="Resource">
+<rdf:Bag>
+<rdf:li rdf:parseType="Resource">
+<vCard:N rdf:parseType="Resource">
+<vCard:Family>Shapiro</vCard:Family>
+<vCard:Given>Bruce</vCard:Given>
+</vCard:N>
+<vCard:EMAIL>bshapiro@jpl.nasa.gov</vCard:EMAIL>
+<vCard:ORG>
+<vCard:Orgname>NASA Jet Propulsion Laboratory</vCard:Orgname>
+</vCard:ORG>
+</rdf:li>
+</rdf:Bag>
+</dc:creator>
+<dcterms:created rdf:parseType="Resource">
+<dcterms:W3CDTF>2005-02-15T17:43:38</dcterms:W3CDTF>
+</dcterms:created>
+<dcterms:modified rdf:parseType="Resource">
+<dcterms:W3CDTF>2005-05-07T23:42:00</dcterms:W3CDTF>
+</dcterms:modified>
+</rdf:Description>
+            </rdf:RDF>   
+        </annotation>
+    <listOfCompartments>
+      <compartment id="cell" metaid="_000002">
+        <annotation>
+          <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+            <rdf:Description rdf:about="#_000002">
+                  <dc:relation>
+                    <rdf:Bag>
+                      <rdf:li rdf:resource="http://www.geneontology.org/#GO:0005623"/>
+                    </rdf:Bag>
+                  </dc:relation>
+            </rdf:Description>
+          </rdf:RDF>  
+        </annotation> 
+      </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species boundaryCondition="true" compartment="cell" hasOnlySubstanceUnits="true" id="EmptySet" initialAmount="0" metaid="_905743"/>
+      <species compartment="cell" hasOnlySubstanceUnits="true" id="PX" initialAmount="5" metaid="PX" name="Lactose operon repressor">
+<annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#PX">
+<dc:relation>
+<rdf:Bag>
+
+<rdf:li rdf:resource="http://www.uniprot.org/#P03023"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="cell" hasOnlySubstanceUnits="true" id="PY" initialAmount="0" metaid="PY" name="Tetracycline repressor">
+<annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#PY">
+<dc:relation>
+<rdf:Bag>
+
+<rdf:li rdf:resource="http://www.uniprot.org/#P04483"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="cell" hasOnlySubstanceUnits="true" id="PZ" initialAmount="15" metaid="PZ" name="Repressor protein CI">
+<annotation>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#">
+<rdf:Description rdf:about="#PZ">
+<dc:relation>
+<rdf:Bag>
+
+<rdf:li rdf:resource="http://www.uniprot.org/#P03034"/>
+</rdf:Bag>
+</dc:relation>
+</rdf:Description>
+</rdf:RDF>
+</annotation>
+</species>
+      <species compartment="cell" hasOnlySubstanceUnits="true" id="X" initialAmount="0" metaid="_905769" name="transcript LacI"/>
+      <species compartment="cell" hasOnlySubstanceUnits="true" id="Y" initialAmount="0" metaid="_905781" name="transcript TetR"/>
+      <species compartment="cell" hasOnlySubstanceUnits="true" id="Z" initialAmount="0" metaid="_905802" name="transcript CI"/>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="Reaction1" metaid="_905823" name="degradation of LacI transcripts" reversible="false">
+        <listOfReactants>
+          <speciesReference species="X"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k1 </ci>
+              <ci> X </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k1" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction2" metaid="_905842" name="degradation of TetR transcripts" reversible="false">
+        <listOfReactants>
+          <speciesReference species="Y"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k1 </ci>
+              <ci> Y </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k1" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction3" metaid="_905862" name="degradation of CI transcripts" reversible="false">
+        <listOfReactants>
+          <speciesReference species="Z"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k1 </ci>
+              <ci> Z </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="k1" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction4" metaid="_905882" name="translation of LacI" reversible="false">
+        <listOfReactants>
+          <speciesReference species="EmptySet"/>
+          <speciesReference species="X"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PX"/>
+          <speciesReference species="X"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> X </ci>
+              <ci> beta </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="beta" value="5"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction5" metaid="_905903" name="translation of TetR" reversible="false">
+        <listOfReactants>
+          <speciesReference species="EmptySet"/>
+          <speciesReference species="Y"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PY"/>
+          <speciesReference species="Y"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Y </ci>
+              <ci> beta </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="beta" value="5"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction6" metaid="_905923" name="translation of CI" reversible="false">
+        <listOfReactants>
+          <speciesReference species="EmptySet"/>
+          <speciesReference species="Z"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PZ"/>
+          <speciesReference species="Z"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Z </ci>
+              <ci> beta </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="beta" value="5"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction7" metaid="_905943" name="degradation of LacI" reversible="false">
+        <listOfReactants>
+          <speciesReference species="PX"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> PX </ci>
+              <ci> beta </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="beta" value="5"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction8" metaid="_905962" name="degradation of TetR" reversible="false">
+        <listOfReactants>
+          <speciesReference species="PY"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> PY </ci>
+              <ci> beta </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="beta" value="5"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction9" metaid="_905982" name="degradation of CI" reversible="false">
+        <listOfReactants>
+          <speciesReference species="PZ"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EmptySet"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> PZ </ci>
+              <ci> beta </ci>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="beta" value="5"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction10" metaid="_906002" name="transcription of LacI" reversible="false">
+        <listOfReactants>
+          <speciesReference species="EmptySet"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="X"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="PZ"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+              <ci> alpha0 </ci>
+              <apply>
+                <divide/>
+                <apply>
+                  <plus/>
+                  <ci> alpha </ci>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <power/>
+                      <ci> PZ </ci>
+                      <ci> n </ci>
+                    </apply>
+                    <ci> alpha1 </ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <power/>
+                    <ci> K </ci>
+                    <ci> n </ci>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <ci> PZ </ci>
+                    <ci> n </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="alpha1" value="0"/>
+            <parameter id="n" value="2.1"/>
+            <parameter id="K" value="1"/>
+            <parameter id="alpha0" value="0"/>
+            <parameter id="alpha" value="250"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction11" metaid="_906022" name="transcription of TetR" reversible="false">
+        <listOfReactants>
+          <speciesReference species="EmptySet"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Y"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="PX"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+              <ci> alpha0 </ci>
+              <apply>
+                <divide/>
+                <apply>
+                  <plus/>
+                  <ci> alpha </ci>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <power/>
+                      <ci> PX </ci>
+                      <ci> n </ci>
+                    </apply>
+                    <ci> alpha1 </ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <power/>
+                    <ci> K </ci>
+                    <ci> n </ci>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <ci> PX </ci>
+                    <ci> n </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="alpha1" value="0"/>
+            <parameter id="n" value="2.1"/>
+            <parameter id="K" value="1"/>
+            <parameter id="alpha0" value="0"/>
+            <parameter id="alpha" value="250"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Reaction12" metaid="_906042" name="transcription of CI" reversible="false">
+        <listOfReactants>
+          <speciesReference species="EmptySet"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Z"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="PY"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+              <ci> alpha0 </ci>
+              <apply>
+                <divide/>
+                <apply>
+                  <plus/>
+                  <ci> alpha </ci>
+                  <apply>
+                    <times/>
+                    <apply>
+                      <power/>
+                      <ci> PY </ci>
+                      <ci> n </ci>
+                    </apply>
+                    <ci> alpha1 </ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <power/>
+                    <ci> K </ci>
+                    <ci> n </ci>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <ci> PY </ci>
+                    <ci> n </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="alpha1" value="0"/>
+            <parameter id="n" value="2.1"/>
+            <parameter id="K" value="1"/>
+            <parameter id="alpha0" value="0"/>
+            <parameter id="alpha" value="250"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
