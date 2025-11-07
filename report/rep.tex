@@ -219,20 +219,9 @@ The left one is gillespie SSA and right one is ODE, both the dynamics are very s
 The animation videos are also mostly similar.
 
 \section*{Validation on Small Networks}
-
-\section*{Discussion and Future Work}
-In this report we have improved our dynamic comparison framework and took a step towards something fun and exciting, an inside the screen organism. This idea is fun because its make us seat on the god seat, the creator's seat. But we still have some pending work from previous weekly reports and future improvements on this report as well.
-Our working code now can handle any two kgml files and output persistence diagram, graph maps, dynamic comparison metrics, overlay graphs and animated visualizations. However, there are still several avenues for further enhancement and validation:
-\begin{itemize}
-    \item Implementing proper parameter estimation methods to calculate rate constants from literature or related databases to increase biological realism of dynamic simulations.
-    \item Expanding the dynamic comparison framework to include stochastic simulation algorithms (e.g., Gillespie) to capture intrinsic noise in biochemical networks.
-    \item Writing more theory and Developing  DIOR (digital organism) prototype using simplified CRNs and energy/resource management within a 2D grid environment.
-    \item Agenda items of biweekly report 2 (comparing permutations
-    of the KGML files using API of KEGG databases or easier version of this
-    could be , we can save 100s of KGML files in a specific folder, than our script compares
-    these 100 files with each other that would be 4950 comparisons, and return to us just those
-    files that fit our criteria of similarity.) and others listed in Biweely Report 2.
-\end{itemize}
+To be continued, it does create lots of errors such as SBML (XML) files dont have a KEGG ID so they have zero species in common which makes dynamic comparison invalid, for topological comparison, we don't yet have a framework to convert SBML files into CSV, so all of these would be done in the next report along with other pending agendas.
+\section*{ Future Work Timeline}
+ 
 \begin{table}[H]
     \centering
     \begin{tabular}{ccc}
@@ -246,7 +235,8 @@ Our working code now can handle any two kgml files and output persistence diagra
         Mid semester II exams &    10-16 October \\
         Biweekly Report 3 &  \sout{21 September} 24 October  \\
         Biweekly Report 4 & 7 November \\
-
+        End Semester Exams & 14-26 November \\
+        Biweekly Report 4.1 & 2 December \\
     \end{tabular}
     \label{tab:placeholder}
 \end{table}

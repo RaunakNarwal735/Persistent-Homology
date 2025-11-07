@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 24.1) (preloaded format=xelatex 2025.8.22)  8 NOV 2025 01:01
+This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 24.1) (preloaded format=xelatex 2025.8.22)  8 NOV 2025 01:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -981,12 +981,12 @@ Package rerunfilecheck Info: Checksums for `rep.out':
 (rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 23106 strings out of 409617
- 431574 string characters out of 5772592
+ 23099 strings out of 409617
+ 431432 string characters out of 5772592
  1928191 words of memory out of 5000000
- 44883 multiletter control sequences out of 15000+600000
- 608619 words of font info for 63 fonts, out of 8000000 for 9000
+ 44877 multiletter control sequences out of 15000+600000
+ 608244 words of font info for 62 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 83i,12n,87p,1239b,583s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 83i,13n,87p,1239b,583s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on rep.pdf (5 pages).
