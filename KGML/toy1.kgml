@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE pathway SYSTEM "https://www.kegg.jp/kegg/xml/KGML_v0.7.1_.dtd">
+<pathway name="hsa00001_toy" org="hsa" number="00001" title="Toy MAPK Cascade" image="toy_mapk.png" link="https://www.kegg.jp/kegg-bin/show_pathway?hsa00010">
+
+  <!-- Entries -->
+  <entry id="1" name="hsa:5594" type="gene"> <!-- MAPK1 -->
+    <graphics name="MAPK1" fgcolor="#000000" bgcolor="#B0E0E6" type="rectangle" x="100" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="2" name="cpd:C00020" type="compound"> <!-- ATP -->
+    <graphics name="ATP" fgcolor="#000000" bgcolor="#FFD700" type="circle" x="180" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="3" name="hsa:5595" type="gene"> <!-- MAPK3 -->
+    <graphics name="MAPK3" fgcolor="#000000" bgcolor="#B0E0E6" type="rectangle" x="260" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="4" name="cpd:C00008" type="compound"> <!-- ADP -->
+    <graphics name="ADP" fgcolor="#000000" bgcolor="#FFD700" type="circle" x="340" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="5" name="hsa:1026" type="gene"> <!-- CDK2 -->
+    <graphics name="CDK2" fgcolor="#000000" bgcolor="#B0E0E6" type="rectangle" x="420" y="100" width="46" height="17"/>
+  </entry>
+
+  <!-- Relations -->
+  <relation entry1="1" entry2="3" type="activation">
+    <subtype name="phosphorylation" value=""/>
+  </relation>
+
+  <relation entry1="2" entry2="3" type="reaction">
+    <subtype name="cofactor" value=""/>
+  </relation>
+
+  <relation entry1="3" entry2="5" type="activation">
+    <subtype name="expression" value=""/>
+  </relation>
+
+  <relation entry1="2" entry2="4" type="reaction">
+    <subtype name="product" value=""/>
+  </relation>
+
+</pathway>

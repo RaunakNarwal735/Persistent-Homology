@@ -1,0 +1,30 @@
+{
+  "file1": "C:\\Users\\rishu narwal\\Desktop\\MPI-CBG\\KGML\\toy1.kgml",
+  "file2": "C:\\Users\\rishu narwal\\Desktop\\MPI-CBG\\KGML\\toy2.kgml",
+  "timestamp": "20251108_013143",
+  "common_species": {
+    "2": "cpd:C00020",
+    "4": "cpd:C00008"
+  },
+  "metrics": {
+    "dtw_avg": 0.0,
+    "mse_avg": 0.0,
+    "corr_avg": NaN,
+    "per_species": [
+      {
+        "id": "2",
+        "name": "cpd:C00020",
+        "dtw": 0.0,
+        "mse": 0.0,
+        "corr": null
+      },
+      {
+        "id": "4",
+        "name": "cpd:C00008",
+        "dtw": 0.0,
+        "mse": 0.0,
+        "corr": null
+      }
+    ]
+  }
+}

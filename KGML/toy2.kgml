@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE pathway SYSTEM "https://www.kegg.jp/kegg/xml/KGML_v0.7.1_.dtd">
+<pathway name="eco00002_toy" org="eco" number="00002" title="Toy Metabolic Feedback Loop" image="toy_feedback.png" link="https://www.kegg.jp/kegg-bin/show_pathway?eco00010">
+
+  <!-- Entries -->
+  <entry id="1" name="eco:b0002" type="gene"> <!-- thrA -->
+    <graphics name="thrA" fgcolor="#000000" bgcolor="#ADD8E6" type="rectangle" x="100" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="2" name="cpd:C00049" type="compound"> <!-- L-Aspartate -->
+    <graphics name="L-Aspartate" fgcolor="#000000" bgcolor="#FFD700" type="circle" x="180" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="3" name="eco:b0003" type="gene"> <!-- thrB -->
+    <graphics name="thrB" fgcolor="#000000" bgcolor="#ADD8E6" type="rectangle" x="260" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="4" name="cpd:C00188" type="compound"> <!-- L-Threonine -->
+    <graphics name="L-Threonine" fgcolor="#000000" bgcolor="#FFD700" type="circle" x="340" y="100" width="46" height="17"/>
+  </entry>
+
+  <entry id="5" name="cpd:C00025" type="compound"> <!-- Glutamate -->
+    <graphics name="Glutamate" fgcolor="#000000" bgcolor="#FFD700" type="circle" x="420" y="100" width="46" height="17"/>
+  </entry>
+
+  <!-- Relations -->
+  <relation entry1="1" entry2="2" type="activation">
+    <subtype name="catalysis" value=""/>
+  </relation>
+
+  <relation entry1="2" entry2="3" type="activation">
+    <subtype name="substrate" value=""/>
+  </relation>
+
+  <relation entry1="3" entry2="4" type="activation">
+    <subtype name="product" value=""/>
+  </relation>
+
+  <relation entry1="4" entry2="1" type="inhibition">
+    <subtype name="feedback inhibition" value=""/>
+  </relation>
+
+</pathway>
