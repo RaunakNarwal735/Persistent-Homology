@@ -1,6 +1,6 @@
 @echo off
 :: using this batch file you auto commit and push changes to the repo, if any changes are detected
-cd /d "C:\Users\rishu narwal\Desktop\MPI-CBG"
+cd /d "C:\Users\rishu narwal\Desktop\mpi_cbg"
 :: Checking for changes in the script, we are letting git handle venv via .gitignore
 for /f %%i in ('git status --porcelain') do set changes=true
 
