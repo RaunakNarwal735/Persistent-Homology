@@ -1,0 +1,28 @@
+@startuml
+title **MPI-CBG Pipeline — End-to-End Sequence**
+
+actor User
+participant run_all as "run_all.py"
+participant topology as "topology_compare.py"
+participant dcplus as "DC_plus.py"
+database FS as "Filesystem"
+
+User -> run_all: Execute with\n--graphA --graphB [--outdir]
+run_all -> FS: Create outputs/<timestamp>/
+
+== Topology Phase (TDA) ==
+run_all -> topology: Launch via subprocess
+topology -> topology: Load KGML/CSV\nand build graphs
+topology -> topology: Compute\nSP matrix → ripser → diagrams
+topology -> FS: Save TDA images\n+ summary.json
+
+== Dynamics Phase (ODE / SSA) ==
+run_all -> dcplus: Launch via subprocess
+dcplus -> dcplus: Parse files\nand reaction networks
+dcplus -> dcplus: Build ODEs or SSA\n(simulate / MC)
+dcplus -> dcplus: Compute similarity\n(DTW, MSE, Corr)
+dcplus -> FS: Save dynamics plots\n+ summary.json
+
+run_all --> User: Print output directory
+
+@enduml

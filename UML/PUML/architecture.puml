@@ -1,0 +1,49 @@
+@startuml
+title MPI-CBG — Architecture (Accurate + Valid Syntax)
+
+package "Scripts" {
+    component RunAll as run_all_py
+    component Topology as topology_compare_py
+    component DCPlus as dc_plus_py
+}
+
+' Execution flow
+run_all_py --> topology_compare_py : launches (TDA)
+run_all_py --> dc_plus_py : launches (Dynamics)
+
+' External libs for topology_compare.py
+component "ripser / persim" as Ripser
+topology_compare_py --> Ripser
+
+' External libs for dc_plus.py
+component "scipy / numpy" as SciPy
+component "networkx / matplotlib" as Viz
+dc_plus_py --> SciPy
+dc_plus_py --> Viz
+
+note right of run_all_py
+Inputs:
+  --graphA
+  --graphB
+  --outdir
+Behaviour:
+  Creates timestamped output folder
+  Calls both scripts via subprocess
+end note
+
+note right of topology_compare_py
+Produces:
+  - persistence diagrams (PNG)
+  - DGMs (.npy / .json)
+  - summary.json
+end note
+
+note right of dc_plus_py
+Produces:
+  - ODE/Gillespie trajectories
+  - Heatmaps, overlays
+  - Similarity metrics
+  - summary.json
+end note
+
+@enduml

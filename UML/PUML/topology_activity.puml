@@ -1,0 +1,16 @@
+@startuml
+title topology_compare.py — activity
+
+start
+:Load input (CSV or KGML);
+if (KGML?) then (yes)
+  :kgml_to_csv (optional)
+endif
+:Load graph into NetworkX;
+:Compute shortest path distance matrix;
+:Compute persistence via ripser;
+:Save persistence diagrams (PNG);
+:Compute bottleneck/wasserstein distances;
+:Write summary.json and summary.txt;
+stop
+@enduml

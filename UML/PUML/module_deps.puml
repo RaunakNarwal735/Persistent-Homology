@@ -1,0 +1,35 @@
+@startuml
+title **MPI-CBG — Module Dependency Diagram**
+
+package "mpi_cbg.scripts" {
+    component "run_all.py" as RunAll
+    component "topology_compare.py" as Topology
+    component "DC_plus.py" as DCPlus
+}
+
+RunAll --> Topology : calls via subprocess
+RunAll --> DCPlus : calls via subprocess
+
+' External libraries used by topology_compare.py
+component "networkx" as NX
+component "pandas" as PD
+component "ripser" as Ripser
+component "persim" as Persim
+
+Topology --> NX
+Topology --> PD
+Topology --> Ripser
+Topology --> Persim
+
+' External libraries used by DC_plus.py
+component "numpy" as NP
+component "scipy" as SciPy
+component "matplotlib" as MPL
+component "networkx (dyn)" as NX2
+
+DCPlus --> NP
+DCPlus --> SciPy
+DCPlus --> MPL
+DCPlus --> NX2
+
+@enduml

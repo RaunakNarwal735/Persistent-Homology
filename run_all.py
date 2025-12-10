@@ -5,6 +5,7 @@ from datetime import datetime
 import sys
 
 def main():
+    """ """
     parser = argparse.ArgumentParser(
         description="Run both persistence diagram and dynamic comparison for two networks"
     )

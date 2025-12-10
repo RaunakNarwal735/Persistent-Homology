@@ -1,37 +1,66 @@
-import argparse
-import os
-from pathlib import Path
-import json
-import math
+import argparse # For command-line argument parsing
+import os # Operating system interfaces
+from pathlib import Path # Object-oriented filesystem paths
+import json 
+import math 
 import numpy as np
 import pandas as pd
-import networkx as nx
-from scipy.sparse.csgraph import floyd_warshall
-from ripser import ripser
-from persim import plot_diagrams, bottleneck, wasserstein
+import networkx as nx # NetworkX for graph handling
+from scipy.sparse.csgraph import floyd_warshall # For shortest path computations
+from ripser import ripser # Persistent homology computations
+from persim import plot_diagrams, bottleneck, wasserstein # Diagram plotting and distance metrics
 import matplotlib.pyplot as plt
 import seaborn as sns
-import xml.etree.ElementTree as ET
-
+import xml.etree.ElementTree as ET # XML parsing
+# Set seaborn style (for better aesthetics)
 sns.set(style="whitegrid")
-
+# sns.set_context("notebook")
 def ensure_outdir(path: str = "outputs") -> Path:
+    """
+    
+    Parameters
+    ----------
+    path: str :
+         (Default value = "outputs")
+
+    Returns
+    -------
+     Ensures output directory exists; creates it if missing.
+     Returns a pathlib object to the directory.
+  
+    """
     p = Path(path)
     p.mkdir(parents=True, exist_ok=True)
     return p
 
+# Converts a KEGG KGML pathway file into a simple CSV list.
+# Extracts all entries (nodes) and relations/reactions (edges).
+# KGML stores reaction edges differently; this unifies them into a single format.
 
 def kgml_to_csv(kgml_path: str, out_csv: str):
-    tree = ET.parse(kgml_path)
-    root = tree.getroot()
+    """
 
-    entries = {}
-    for entry in root.findall("entry"):
-        eid = entry.attrib.get("id")
+    Parameters
+    ----------
+    kgml_path: str :
+        
+    out_csv: str :
+        
+
+    Returns
+    -------
+
+    """
+    tree = ET.parse(kgml_path) 
+    root = tree.getroot() # Get root element of the XML tree
+
+    entries = {} # Map of entry IDs to names
+    for entry in root.findall("entry"): 
+        eid = entry.attrib.get("id") 
         name = entry.attrib.get("name", eid)
         entries[eid] = name
 
-    edges = []
+    edges = [] # List of edges (source, target, type)
     for relation in root.findall("relation"):
         e1 = relation.attrib.get("entry1")
         e2 = relation.attrib.get("entry2")
@@ -39,7 +68,7 @@ def kgml_to_csv(kgml_path: str, out_csv: str):
         if e1 in entries and e2 in entries:
             edges.append((entries[e1], entries[e2], rtype))
 
-    for reaction in root.findall("reaction"):
+    for reaction in root.findall("reaction"): 
         substrates = [s.attrib.get("id") for s in reaction.findall("substrate")]
         products = [p.attrib.get("id") for p in reaction.findall("product")]
         for s in substrates:
@@ -54,15 +83,30 @@ def kgml_to_csv(kgml_path: str, out_csv: str):
     print(f"Converted {kgml_path} -> {out_csv} (nodes={summary['nodes']}, edges={summary['edges']})")
     return summary
 
+# Load an edge-list CSV into a NetworkX graph.
+# Handles both weighted and unweighted edges.
 
 def load_graph_from_csv(csv_path: str, directed: bool = True) -> nx.Graph:
+    """
+
+    Parameters
+    ----------
+    csv_path: str :
+        
+    directed: bool :
+         (Default value = True)
+
+    Returns
+    -------
+
+    """
     df = pd.read_csv(csv_path)
     df.columns = [c.lower() for c in df.columns]
-    if not {"source", "target"}.issubset(df.columns):
+    if not {"source", "target"}.issubset(df.columns): 
         raise ValueError("CSV must contain columns: source,target,(optional)weight or type")
     has_w = "weight" in df.columns
 
-    G = nx.DiGraph() if directed else nx.Graph()
+    G = nx.DiGraph() if directed else nx.Graph() # Create directed or undirected graph
     if has_w:
         for _, r in df.iterrows():
             G.add_edge(str(r["source"]), str(r["target"]), weight=float(r["weight"]))
@@ -70,7 +114,7 @@ def load_graph_from_csv(csv_path: str, directed: bool = True) -> nx.Graph:
         for _, r in df.iterrows():
             G.add_edge(str(r["source"]), str(r["target"]), weight=1.0)
 
-    UG = nx.Graph()
+    UG = nx.Graph() # Convert to undirected graph with minimum weights
     for u, v, w in G.edges(data=True):
         wt = w.get("weight", 1.0)
         if UG.has_edge(u, v):
@@ -80,8 +124,21 @@ def load_graph_from_csv(csv_path: str, directed: bool = True) -> nx.Graph:
     print(f"Loaded CSV graph {csv_path}: nodes={UG.number_of_nodes()}, edges={UG.number_of_edges()}")
     return UG
 
+# Load a KGML file as a graph (NetworkX undirected).
+# Extract nodes and edges, similar to kgml_to_csv but directly into graph form.
 
 def load_graph_from_kgml(kgml_path: str) -> nx.Graph:
+    """
+
+    Parameters
+    ----------
+    kgml_path: str :
+        
+
+    Returns
+    -------
+
+    """
     tree = ET.parse(kgml_path)
     root = tree.getroot()
     entries = {}
@@ -106,8 +163,24 @@ def load_graph_from_kgml(kgml_path: str) -> nx.Graph:
     print(f"Loaded KGML graph {kgml_path}: nodes={G.number_of_nodes()}, edges={G.number_of_edges()}")
     return G
 
+# Compute graph diameter safely, even for:
+# empty graphs
+# single node graphs
+# disconnected graphs
+# Falls back to Floyd–Warshall if NetworkX cannot find diameter.
 
 def graph_diameter(G: nx.Graph) -> int:
+    """
+
+    Parameters
+    ----------
+    G: nx.Graph :
+        
+
+    Returns
+    -------
+
+    """
     
     if G.number_of_nodes() == 0:
         return 0
@@ -139,8 +212,26 @@ def graph_diameter(G: nx.Graph) -> int:
             maxd = d
     return int(maxd)
 
+# Convert the graph into a full distance matrix.
+# Uses Floyd–Warshall for all-pairs shortest paths.
+# Infinite distances (disconnected nodes) are replaced with a large constant.
 
 def shortest_path_distance_matrix(G: nx.Graph, disconnected_value: float = None) -> (np.ndarray, list):
+    """
+
+    Parameters
+    ----------
+    G: nx.Graph :
+        
+    disconnected_value: float :
+         (Default value = None) -> (np.ndarray)
+    list :
+        
+
+    Returns
+    -------
+
+    """
     nodes = list(G.nodes())
     idx = {n: i for i, n in enumerate(nodes)}
     n = len(nodes)
@@ -160,8 +251,28 @@ def shortest_path_distance_matrix(G: nx.Graph, disconnected_value: float = None)
     D[~np.isfinite(D)] = disconnected_value
     return np.asarray(D), nodes
 
+# Run Ripser on the distance matrix to compute persistence diagrams.
+# maxdim controls homology dimension (H0, H1,...).
+# thresh limits the filtration to keep runtime reasonable.
 
+# Returns diagrams and full Ripser result.
 def persistence_from_distance(D: np.ndarray, maxdim: int = 1, thresh: float = None):
+    
+    """
+
+    Parameters
+    ----------
+    D: np.ndarray :
+        
+    maxdim: int :
+         (Default value = 1)
+    thresh: float :
+         (Default value = None)
+
+    Returns
+    -------
+
+    """
     if D.size == 0:
         return [np.empty((0,2)) for _ in range(maxdim+1)], None
     finite = D[np.isfinite(D)]
@@ -170,12 +281,42 @@ def persistence_from_distance(D: np.ndarray, maxdim: int = 1, thresh: float = No
     res = ripser(D, maxdim=maxdim, thresh=thresh, distance_matrix=True)
     return res["dgms"], res
 
-
+# Convert persistence diagrams to a dictionary format for JSON serialization.
 def persistence_to_dict(dgms):
+    """
+
+    Parameters
+    ----------
+    dgms :
+        
+
+    Returns
+    -------
+
+    """
     return {f"H{dim}": dgms[dim].tolist() if len(dgms) > dim else [] for dim in range(len(dgms))}
 
-
+# Plot and save persistence diagrams.
 def plot_and_save(diagrams, title: str, outdir: Path, tag: str, show: bool = False):
+    """
+
+    Parameters
+    ----------
+    diagrams :
+        
+    title: str :
+        
+    outdir: Path :
+        
+    tag: str :
+        
+    show: bool :
+         (Default value = False)
+
+    Returns
+    -------
+
+    """
     outdir.mkdir(parents=True, exist_ok=True)
     plt.figure(figsize=(6,5))
     plot_diagrams(diagrams, show=False)
@@ -188,8 +329,25 @@ def plot_and_save(diagrams, title: str, outdir: Path, tag: str, show: bool = Fal
     plt.close()
     return fp
 
-
+# Plot and save the graph structure.
 def plot_graph(G: nx.Graph, outdir: Path, name: str, show: bool = False):
+    """
+
+    Parameters
+    ----------
+    G: nx.Graph :
+        
+    outdir: Path :
+        
+    name: str :
+        
+    show: bool :
+         (Default value = False)
+
+    Returns
+    -------
+
+    """
     outdir.mkdir(parents=True, exist_ok=True)
     plt.figure(figsize=(7,7))
     pos = nx.spring_layout(G, seed=42)
@@ -226,8 +384,23 @@ def plot_graph(G: nx.Graph, outdir: Path, name: str, show: bool = False):
     plt.close()
     return fp
 
-
+# Compute bottleneck and Wasserstein distances between two diagrams.
 def compute_distance_metrics(dgA, dgB, p: int = 2):
+    """
+
+    Parameters
+    ----------
+    dgA :
+        
+    dgB :
+        
+    p: int :
+         (Default value = 2)
+
+    Returns
+    -------
+
+    """
     A = dgA if dgA is not None else np.empty((0,2))
     B = dgB if dgB is not None else np.empty((0,2))
     A = np.asarray(A)
@@ -265,8 +438,23 @@ def compute_distance_metrics(dgA, dgB, p: int = 2):
 
     return bn, ws
 
-
+# Compute distance metrics for all homology dimensions in the diagrams.
 def compare_diagrams_full(diagA, diagB, p: int = 2):
+    """
+
+    Parameters
+    ----------
+    diagA :
+        
+    diagB :
+        
+    p: int :
+         (Default value = 2)
+
+    Returns
+    -------
+
+    """
     metrics = {}
     maxdim = max(len(diagA), len(diagB))
     for dim in range(maxdim):
@@ -277,8 +465,31 @@ def compare_diagrams_full(diagA, diagB, p: int = 2):
         metrics[f"H{dim}_wasserstein"] = ws
     return metrics
 
-
+# Main pipeline to run the full analysis.
 def run_pipeline(graphA: nx.Graph, graphB: nx.Graph, nameA: str, nameB: str, outdir: str = "outputs", maxdim: int = 1, p: int = 2):
+    """
+
+    Parameters
+    ----------
+    graphA: nx.Graph :
+        
+    graphB: nx.Graph :
+        
+    nameA: str :
+        
+    nameB: str :
+        
+    outdir: str :
+         (Default value = "outputs")
+    maxdim: int :
+         (Default value = 1)
+    p: int :
+         (Default value = 2)
+
+    Returns
+    -------
+
+    """
     out = ensure_outdir(outdir)
 
     DA, nodesA = shortest_path_distance_matrix(graphA)
@@ -343,6 +554,7 @@ def run_pipeline(graphA: nx.Graph, graphB: nx.Graph, nameA: str, nameB: str, out
 
 
 def parse_args():
+    """ """
     ap = argparse.ArgumentParser(description="Persistent homology comparison of two chemical networks")
     ap.add_argument("--graphA", type=str, default=None, help="CSV or KGML file for graph A")
     ap.add_argument("--graphB", type=str, default=None, help="CSV or KGML file for graph B")
@@ -357,6 +569,7 @@ def parse_args():
 
 
 def make_demo_graphs():
+    """ """
     G1 = nx.cycle_graph(5)
     G2 = nx.path_graph(5)
     G1 = nx.relabel_nodes(G1, lambda x: f"n{x}")
@@ -365,6 +578,19 @@ def make_demo_graphs():
 
 
 def validate_conversion(kgml_path: str, csv_path: str) -> dict:
+    """
+
+    Parameters
+    ----------
+    kgml_path: str :
+        
+    csv_path: str :
+        
+
+    Returns
+    -------
+
+    """
     Gkg = load_graph_from_kgml(kgml_path)
     Gcsv = load_graph_from_csv(csv_path)
     report = {
@@ -379,6 +605,7 @@ def validate_conversion(kgml_path: str, csv_path: str) -> dict:
 
 
 def main():
+    """ """
     args = parse_args()
 
     if args.demo:
@@ -389,6 +616,17 @@ def main():
             raise SystemExit("Provide --graphA and --graphB files (CSV or KGML) (or use --demo)")
 
         def load_graph(path):
+            """
+
+            Parameters
+            ----------
+            path :
+                
+
+            Returns
+            -------
+
+            """
             if path.lower().endswith(".kgml"):
                 return load_graph_from_kgml(path)
             elif path.lower().endswith(".csv"):

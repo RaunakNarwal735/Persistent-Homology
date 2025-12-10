@@ -24,6 +24,17 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 
 def parse_kgml(kgml_file):
+    """
+
+    Parameters
+    ----------
+    kgml_file :
+        
+
+    Returns
+    -------
+
+    """
     
     tree = ET.parse(kgml_file)
     root = tree.getroot()
@@ -56,6 +67,17 @@ def parse_kgml(kgml_file):
     return species_list, reactions, species_map
 #break little 30 mintues
 def parse_sbml(sbml_file):
+    """
+
+    Parameters
+    ----------
+    sbml_file :
+        
+
+    Returns
+    -------
+
+    """
     tree = ET.parse(sbml_file)
     root = tree.getroot()
     ns = {'sbml': 'http://www.sbml.org/sbml/level2/version4'}
@@ -79,6 +101,17 @@ def parse_sbml(sbml_file):
     return species_list, reactions
 
 def parse_auto(file_path):
+    """
+
+    Parameters
+    ----------
+    file_path :
+        
+
+    Returns
+    -------
+
+    """
     with open(file_path, 'r', encoding='utf-8') as f:
         first_kb = f.read(2048)
     if '<kgml' in first_kb.lower() or 'pathway' in first_kb.lower():
@@ -89,6 +122,17 @@ def parse_auto(file_path):
         raise ValueError("Unrecognized file type: not KGML or SBML")
 
 def load_params(params_path):
+    """
+
+    Parameters
+    ----------
+    params_path :
+        
+
+    Returns
+    -------
+
+    """
     
     if params_path is None:
         return {}
@@ -105,6 +149,23 @@ def load_params(params_path):
 #3
 
 def build_ode_system(species_list, reactions, params=None, default_k=1.0):
+    """
+
+    Parameters
+    ----------
+    species_list :
+        
+    reactions :
+        
+    params :
+         (Default value = None)
+    default_k :
+         (Default value = 1.0)
+
+    Returns
+    -------
+
+    """
    
     n = len(species_list)
     species_index = {s: i for i, s in enumerate(species_list)}
@@ -137,6 +198,19 @@ def build_ode_system(species_list, reactions, params=None, default_k=1.0):
         reaction_info.append({'id': rid, 'k': float(k), 'type': rtype, 'substrate_idxs': substrate_idxs, 'product_idxs': product_idxs, 'sto_subs': sto_subs})
 
     def odes(t, x):
+        """
+
+        Parameters
+        ----------
+        t :
+            
+        x :
+            
+
+        Returns
+        -------
+
+        """
         
         v = np.zeros(m)
         for j, info in enumerate(reaction_info):
@@ -163,6 +237,35 @@ def build_ode_system(species_list, reactions, params=None, default_k=1.0):
 
 
 def simulate(species_list, reactions, params=None, t_span=(0, 20), n_points=200, method='RK45', atol=1e-6, rtol=1e-3, steady_threshold=None):
+    """
+
+    Parameters
+    ----------
+    species_list :
+        
+    reactions :
+        
+    params :
+         (Default value = None)
+    t_span :
+         (Default value = (0)
+    20) :
+        
+    n_points :
+         (Default value = 200)
+    method :
+         (Default value = 'RK45')
+    atol :
+         (Default value = 1e-6)
+    rtol :
+         (Default value = 1e-3)
+    steady_threshold :
+         (Default value = None)
+
+    Returns
+    -------
+
+    """
     
     odes, species_index, reaction_info = build_ode_system(species_list, reactions, params)
     x0 = np.ones(len(species_list))
@@ -196,6 +299,29 @@ def simulate(species_list, reactions, params=None, t_span=(0, 20), n_points=200,
     return np.array(t_all), np.vstack(y_all).T
 
 def simulate_gillespie(species_list, reactions, params=None, t_max=50.0, max_events=100000, init_counts=None, rng_seed=None):
+    """
+
+    Parameters
+    ----------
+    species_list :
+        
+    reactions :
+        
+    params :
+         (Default value = None)
+    t_max :
+         (Default value = 50.0)
+    max_events :
+         (Default value = 100000)
+    init_counts :
+         (Default value = None)
+    rng_seed :
+         (Default value = None)
+
+    Returns
+    -------
+
+    """
     n = len(species_list)
     species_index = {sid: i for i, sid in enumerate(species_list)}
     if init_counts is None:
@@ -255,13 +381,52 @@ def simulate_gillespie(species_list, reactions, params=None, t_max=50.0, max_eve
 NA_CONST = 6.02214076e23
 
 def concs_to_counts(x_conc, volume_l):
+    """
+
+    Parameters
+    ----------
+    x_conc :
+        
+    volume_l :
+        
+
+    Returns
+    -------
+
+    """
     scale = NA_CONST * volume_l
     return np.maximum(0, np.round(x_conc * scale).astype(int))
 
 def counts_to_concs(x_counts, volume_l):
+    """
+
+    Parameters
+    ----------
+    x_counts :
+        
+    volume_l :
+        
+
+    Returns
+    -------
+
+    """
     return x_counts / (NA_CONST * volume_l)
 
 def convert_k_ode_to_k_ssa(reaction_info, volume_l):
+    """
+
+    Parameters
+    ----------
+    reaction_info :
+        
+    volume_l :
+        
+
+    Returns
+    -------
+
+    """
     scale = NA_CONST * volume_l
     k_ssa = {}
     for r in reaction_info:
@@ -277,6 +442,33 @@ NA_CONST = 6.02214076e23
 def estimate_volume_for_target_events(species_list, reaction_info, params=None,
                                       x0_conc=None, t_span=(0.0, 20.0), target_events=2000,
                                       min_volume=1e-21, max_volume=1e-9):
+    """
+
+    Parameters
+    ----------
+    species_list :
+        
+    reaction_info :
+        
+    params :
+         (Default value = None)
+    x0_conc :
+         (Default value = None)
+    t_span :
+         (Default value = (0.0)
+    20.0) :
+        
+    target_events :
+         (Default value = 2000)
+    min_volume :
+         (Default value = 1e-21)
+    max_volume :
+         (Default value = 1e-9)
+
+    Returns
+    -------
+
+    """
     if x0_conc is None:
         x0_conc = np.ones(len(species_list), dtype=float)
     A_per_S = 0.0
@@ -308,6 +500,27 @@ def estimate_volume_for_target_events(species_list, reaction_info, params=None,
     return V_clamped
 
 def gillespie_setup_diagnostics(species_list, reactions, params, volume_l, n_sample=5, x0_conc=None):
+    """
+
+    Parameters
+    ----------
+    species_list :
+        
+    reactions :
+        
+    params :
+        
+    volume_l :
+        
+    n_sample :
+         (Default value = 5)
+    x0_conc :
+         (Default value = None)
+
+    Returns
+    -------
+
+    """
     odes, species_index, reaction_info = build_ode_system(species_list, reactions, params)
     if x0_conc is None:
         x0_conc = np.ones(len(species_list))
@@ -346,6 +559,37 @@ def gillespie_setup_diagnostics(species_list, reactions, params, volume_l, n_sam
     return diagnostics
 def simulate_gillespie_mc_auto(species_list, reactions, params=None, t_span=(0,50), n_points=200, mc_runs=20,
                                volume_l=None, x0_conc=None, target_events=2000, debug=True):
+    """
+
+    Parameters
+    ----------
+    species_list :
+        
+    reactions :
+        
+    params :
+         (Default value = None)
+    t_span :
+         (Default value = (0)
+    50) :
+        
+    n_points :
+         (Default value = 200)
+    mc_runs :
+         (Default value = 20)
+    volume_l :
+         (Default value = None)
+    x0_conc :
+         (Default value = None)
+    target_events :
+         (Default value = 2000)
+    debug :
+         (Default value = True)
+
+    Returns
+    -------
+
+    """
     odes, species_index, reaction_info = build_ode_system(species_list, reactions, params)
     if x0_conc is None:
         x0_conc = np.ones(len(species_list))
@@ -378,6 +622,35 @@ def simulate_gillespie_mc_auto(species_list, reactions, params=None, t_span=(0,5
 
 
 def simulate_mc(species_list, reactions, params=None, t_span=(0, 20), n_points=200, method='RK45', mc_runs=1, init_scale=0.1, **kwargs):
+    """
+
+    Parameters
+    ----------
+    species_list :
+        
+    reactions :
+        
+    params :
+         (Default value = None)
+    t_span :
+         (Default value = (0)
+    20) :
+        
+    n_points :
+         (Default value = 200)
+    method :
+         (Default value = 'RK45')
+    mc_runs :
+         (Default value = 1)
+    init_scale :
+         (Default value = 0.1)
+    **kwargs :
+        
+
+    Returns
+    -------
+
+    """
     
     runs = []
     for i in range(mc_runs):
@@ -390,6 +663,17 @@ def simulate_mc(species_list, reactions, params=None, t_span=(0, 20), n_points=2
     return t_ref, y_mean, runs
 #
 def normalize_rows(y):
+    """
+
+    Parameters
+    ----------
+    y :
+        
+
+    Returns
+    -------
+
+    """
    
     mx = np.max(y, axis=1, keepdims=True)
     mx[mx == 0] = 1.0
@@ -397,6 +681,19 @@ def normalize_rows(y):
 
 
 def compute_similarity(y1, y2):
+    """
+
+    Parameters
+    ----------
+    y1 :
+        
+    y2 :
+        
+
+    Returns
+    -------
+
+    """
     
     # align number of species
     n = min(y1.shape[0], y2.shape[0])
@@ -435,14 +732,39 @@ def compute_similarity(y1, y2):
 #
 
 def save_plot(fig, path):
+    """
+
+    Parameters
+    ----------
+    fig :
+        
+    path :
+        
+
+    Returns
+    -------
+
+    """
     fig.tight_layout()
     fig.savefig(path, dpi=300)
     plt.close(fig)
 
 def build_network_graph(species_list, reaction_info, species_map=None):
-    """
-    Build directed network from reaction_info.
+    """Build directed network from reaction_info.
     Nodes = species, Edges = reactions.
+
+    Parameters
+    ----------
+    species_list :
+        
+    reaction_info :
+        
+    species_map :
+         (Default value = None)
+
+    Returns
+    -------
+
     """
     G = nx.DiGraph()
     # Add all species as nodes
@@ -462,6 +784,33 @@ def build_network_graph(species_list, reaction_info, species_map=None):
 
 def animate_network_polished_v3(G, species_list, reaction_info, t, y, pos, save_path,
                                 duration_sec=10, slow_factor=0.25):
+    """
+
+    Parameters
+    ----------
+    G :
+        
+    species_list :
+        
+    reaction_info :
+        
+    t :
+        
+    y :
+        
+    pos :
+        
+    save_path :
+        
+    duration_sec :
+         (Default value = 10)
+    slow_factor :
+         (Default value = 0.25)
+
+    Returns
+    -------
+
+    """
     
     fig, ax = plt.subplots(figsize=(16, 12))  
 
@@ -480,6 +829,17 @@ def animate_network_polished_v3(G, species_list, reaction_info, t, y, pos, save_
     interval = 1000 / fps / slow_factor
 
     def update(frame_idx):
+        """
+
+        Parameters
+        ----------
+        frame_idx :
+            
+
+        Returns
+        -------
+
+        """
         ax.clear()
         frame = frame_indices[frame_idx]
 
@@ -519,6 +879,25 @@ def animate_network_polished_v3(G, species_list, reaction_info, t, y, pos, save_
 
 
 def plot_trajectories(t, y, species, title, save_path):
+    """
+
+    Parameters
+    ----------
+    t :
+        
+    y :
+        
+    species :
+        
+    title :
+        
+    save_path :
+        
+
+    Returns
+    -------
+
+    """
     fig = plt.figure(figsize=(12, 7))
     colors = sns.color_palette('tab20', max(4, len(species)))
     for i in range(y.shape[0]):
@@ -531,6 +910,27 @@ def plot_trajectories(t, y, species, title, save_path):
 
 
 def plot_overlay(t1, y1, t2, y2, species, save_path):
+    """
+
+    Parameters
+    ----------
+    t1 :
+        
+    y1 :
+        
+    t2 :
+        
+    y2 :
+        
+    species :
+        
+    save_path :
+        
+
+    Returns
+    -------
+
+    """
     fig = plt.figure(figsize=(14, 8))
     n = min(y1.shape[0], y2.shape[0])
     colors = sns.color_palette('tab20', max(4, n))
@@ -550,6 +950,23 @@ def plot_overlay(t1, y1, t2, y2, species, save_path):
 
 
 def plot_heatmap(y, species, title, save_path):
+    """
+
+    Parameters
+    ----------
+    y :
+        
+    species :
+        
+    title :
+        
+    save_path :
+        
+
+    Returns
+    -------
+
+    """
     fig = plt.figure(figsize=(12, 8))
     # ensure y is species x time
     sns.heatmap(y, cmap='coolwarm', xticklabels=False, yticklabels=species, cbar_kws={'label': 'Concentration'})
@@ -560,6 +977,23 @@ def plot_heatmap(y, species, title, save_path):
 
 
 def plot_bar(scores, species, metric, save_path):
+    """
+
+    Parameters
+    ----------
+    scores :
+        
+    species :
+        
+    metric :
+        
+    save_path :
+        
+
+    Returns
+    -------
+
+    """
     fig = plt.figure(figsize=(12, 6))
     sns.barplot(x=species[:len(scores)], y=scores, palette='crest')
     plt.xticks(rotation=90)
@@ -570,6 +1004,7 @@ def plot_bar(scores, species, metric, save_path):
 
 
 def main():
+    """ """
     parser = argparse.ArgumentParser(description='Improved dynamic KGML network comparison')
     parser.add_argument('file1', default=None)
     parser.add_argument('file2', default=None)

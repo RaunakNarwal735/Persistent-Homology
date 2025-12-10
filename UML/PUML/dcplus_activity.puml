@@ -1,0 +1,37 @@
+@startuml
+title **DC_plus.py — Activity Workflow**
+
+start
+
+:Load input files\n(KGML / SBML / AUTO CSV);
+:Parse species, reactions,\nand optional parameters;
+:Construct stoichiometric matrix\nand reaction_info;
+:Determine common species\nbetween both networks;
+
+if (Dynamic mode?) then (ODE)
+    :Simulate ODE dynamics\n(solve_ivp / simulate_mc);
+else (Gillespie)
+    :Estimate volume for SSA;
+    :Run Gillespie Monte-Carlo\n(simulate_gillespie_mc_auto);
+endif
+
+:Extract common-species trajectories;
+:Compute similarity metrics\n(DTW, MSE, Pearson Corr);
+
+fork
+    :Plot trajectories;
+fork again
+    :Plot species heatmaps;
+fork again
+    :Plot overlay of networks;
+end fork
+
+if (Animation enabled?) then (yes)
+    :Generate animated MP4\n(network dynamics);
+endif
+
+:Assemble results:\n- plots\n- metrics\n- per-species scores;
+:Write summary.json\nand save all images;
+
+stop
+@enduml
