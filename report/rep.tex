@@ -25,8 +25,8 @@
 \usepackage{tcolorbox} 
 \usepackage{titling}   
 \newtcolorbox{titlebox}{
-  colback=orange!10,
-  colframe=orange!80,
+  colback=magenta!10,
+  colframe=magenta!80,
   boxrule=0.95pt,
   arc=6pt,
   auto outer arc,
@@ -49,7 +49,9 @@
 \predate{\begin{center}}
 \postdate{\end{center}}
 
-\title{\textbf{}\\[0.5em]
+\title{ Biweely Report 5.1 \\
+    \Huge{CODE DOCUMENTATION} \\
+    \large and UML diagrams
 }
 \author{Raunak Narwal\\
 Department of Mathematical Sciences \\
@@ -72,10 +74,10 @@ Indian Institute of Science Education and Research, Mohali, 130406, Punjab}
 \fancyfoot[C]{\small Page \thepage}\setlength{\footskip}{20pt}
 
 
-% Utility for graphics with special filenames
+% 
 \newcommand{\imgfile}[1]{\detokenize{#1}}
 
-% ----- DOCUMENT -----
+% 
 \begin{document}
 \maketitle
 \vspace{-0.8em}
@@ -124,50 +126,50 @@ This function converts pathways from KEGG KGML format into CSV format so that re
 KGML contains entry notes : species , enzymes and compunds \\
 relation edges : regulation links and reaction edges : metabolic conversions \\
 The function works by parsing the XML tree structure of KGML file \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
 \begin{verbatim}
-    tree = ET.parse(kgml_path)
-    root = tree.getroot()
+tree = ET.parse(kgml_path)
+root = tree.getroot()
 \end{verbatim}
     
 \end{tcolorbox}
 
 It iterates over entries and relations to extract nodes and edges \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        entries[eid] = name
-        edges.append((source_name, target_name, rtype))
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+entries[eid] = name
+edges.append((source_name, target_name, rtype))
+\end{verbatim}
         
 \end{tcolorbox}
 Extracts reactions \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-    <reaction>
-       <substrate id="X"/>
-       <product id="Y"/>
-    </reaction>
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+<reaction>
+<substrate id="X"/>
+<product id="Y"/>
+</reaction>
+\end{verbatim}
         
 \end{tcolorbox}
 the loop\\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        for s in substrates:
-        for p in products:
-            edges.append((entries[s], entries[p], "reaction"))
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+for s in substrates:
+    for p in products:
+        edges.append((entries[s], entries[p], "reaction"))
+\end{verbatim}
 \end{tcolorbox}
         
 Then it converts them into pandas DataFrames and saves them as CSV files. \\
 \\
 \textbf{load\_graph\_from\_csv(csv\_path)} \\
 This function loads a CSV file into NetworkX graph \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        df = pd.read_csv(csv_path)
-        df.columns = [c.lower() for c in df.columns]
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+df = pd.read_csv(csv_path)
+df.columns = [c.lower() for c in df.columns]
+\end{verbatim}
 \end{tcolorbox}
 it reads the CSV using pandas, creates a directed graph internally \\
 Then it builds an undirected projection, because distance matrix must be symmetric\\
@@ -181,102 +183,102 @@ the previous function outputs a CSV edge list but this outputs a graph, so they 
 This function computes the diameter of a graph G \\
 which is the longest shortest path between any two nodes \\
 it handles trivial cases \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-    if G.number_of_nodes() == 0:
-        return 0
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+if G.number_of_nodes() == 0:
+    return 0
+\end{verbatim}
 \end{tcolorbox}
 if the graph is connected, then use NetworkX built in BFS diameter \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        if nx.is_connected(G):
-        try:
-            return int(nx.diameter(G))    
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+if nx.is_connected(G):
+    try:
+      return int(nx.diameter(G))    
+\end{verbatim}
 \end{tcolorbox}
 and if it fails , then fallback \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        D = dict(nx.all_pairs_shortest_path_length(G))
-        maxd = max(d for u in D for d in D[u].values())          
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+D = dict(nx.all_pairs_shortest_path_length(G))
+maxd = max(d for u in D for d in D[u].values())          
+\end{verbatim}
 \end{tcolorbox}
 We compute diameter because later, bottleneck/wasserstein are normalized by graph diameter to make metrics comparable across networks. \\
 \\
 \textbf{shortest\_path\_distance\_matrix(G, disconnected\_value=None)} \\
 this is a very critical function in our pipeline, it converts the graph into N*N distance matrix which is then used by Ripser for computing persistent homology. \\
 Lists nodes and indexing \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        nodes = list(G.nodes())
-        idx = {node: i for i,node in enumerate(nodes)}          
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+nodes = list(G.nodes())
+idx = {node: i for i,node in enumerate(nodes)}          
+\end{verbatim}
 \end{tcolorbox}
 this creates consistent ordering of nodes \\
 initializes distance matrix with disconnected value (infinity by default) \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        D = np.full((n, n), np.inf)
-        np.fill_diagonal(D, 0)               
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+D = np.full((n, n), np.inf)
+np.fill_diagonal(D, 0)               
+\end{verbatim}
 \end{tcolorbox}
 fill matrix with edge weights \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        for u, v, data in G.edges(data=True):
-        w = data.get("weight", 1.0)
-        D[i,j] = w
-        D[j,i] = w                 
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+for u, v, data in G.edges(data=True):
+    w = data.get("weight", 1.0)
+    D[i,j] = w
+    D[j,i] = w                 
+\end{verbatim}
 \end{tcolorbox}
 floyd warshall algorithm is used to compute all pairs shortest paths \\
 this computes all pairs shortest paths efficiently \\
 replaces infinities with a large finite value \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        if disconnected_value is None:
-             disconnected_value = 2 * max(finite_distances)
-        D[~np.isfinite(D)] = disconnected_value                
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+if disconnected_value is None:
+    disconnected_value = 2 * max(finite_distances)
+D[~np.isfinite(D)] = disconnected_value                
+\end{verbatim}
 \end{tcolorbox}
 
 \textbf{persistence\_from\_distance(D, maxdim=1, thresh=None)} \\
 purpose is to run  Ripser persistent homology on the distance matrix \\
 it sets threshold for filtration. \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        thresh = 95th percentile of distances              
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+thresh = 95th percentile of distances              
+\end{verbatim}
 \end{tcolorbox}
 calls ripser with distance matrix and parameters \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        res = ripser(D, maxdim=maxdim, thresh=thresh, distance_matrix=True)         
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+res = ripser(D, maxdim=maxdim, thresh=thresh, distance_matrix=True)         
+\end{verbatim}
 \end{tcolorbox}
 it outputs the diagram in a list form\\
 \\
 \textbf{persistence\_to\_dict(dgms)}\\
 it converts diagrams into a dictionary format for easier storage and retrieval \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-         {
-         "H0": [[birth, death], ...],
-          "H1": [[birth, death], ...]
-        }
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+{
+"H0": [[birth, death], ...],
+"H1": [[birth, death], ...]
+}
+\end{verbatim}
 \end{tcolorbox}
 \textbf{plot\_and\_save(diagrams, title, outdir, tag)} \\
 creates a PNG image of the persistence diagram. \\
 \textbf{plot\_graph(G, outdir, name)} \\
 this ceates the graphs visualisations \\
 compute layout \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        pos = nx.spring_layout(G, seed=42)
-        cmap = plt.get_cmap('viridis')
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+pos = nx.spring_layout(G, seed=42)
+cmap = plt.get_cmap('viridis')
+\end{verbatim}
 \end{tcolorbox}
 degree based node size: nodes with higher degree appear larger \\
 degree based color\\
@@ -284,107 +286,507 @@ degree based color\\
 \textbf{compute\_distance\_metrics(dgA, dgB, p=2)} \\
 this computes the TDA distances between two diagrams \\
 it computes bottleneck and wasserstein distances for each homology dimension \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        bn = bottleneck(A, B)
-        ws = wasserstein(A, B, p=p)
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+bn = bottleneck(A, B)
+ws = wasserstein(A, B, p=p)
+\end{verbatim}
 \end{tcolorbox}
 \textbf{compare\_diagrams\_full(diagA, diagB, p=2)} \\
 it computes distances across all homology dimensions present \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        maxdim = max(len(diagA), len(diagB))
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+maxdim = max(len(diagA), len(diagB))
+\end{verbatim}
 \end{tcolorbox}
 loops across dimensions \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        for dim in range(maxdim):
-          A = diagA[dim]
-          B = diagB[dim]
-          bn, ws = compute_distance_metrics(A, B)
-          metrics[f"H{dim}_bottleneck"] = bn
-          metrics[f"H{dim}_wasserstein"] = ws
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+for dim in range(maxdim):
+    A = diagA[dim]
+    B = diagB[dim]
+    bn, ws = compute_distance_metrics(A, B)
+    metrics[f"H{dim}_bottleneck"] = bn
+    metrics[f"H{dim}_wasserstein"] = ws
+\end{verbatim}
 \end{tcolorbox}
 \textbf{run\_pipeline(graphA, graphB, nameA, nameB, outdir, maxdim, p)} \\
 this function integrates every stage, this is exatly what run\_all.py calls. \\
 ensures output directory \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        out = ensure_outdir(outdir)
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+out = ensure_outdir(outdir)
+\end{verbatim}
 \end{tcolorbox}
 Compute distance matrices\\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        DA, nodesA = shortest_path_distance_matrix(graphA)
-        DB, nodesB = shortest_path_distance_matrix(graphB)
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+DA, nodesA = shortest_path_distance_matrix(graphA)
+DB, nodesB = shortest_path_distance_matrix(graphB)
+\end{verbatim}
 \end{tcolorbox}
 These produce:
  DA: NxN distance matrix for Graph A, DB: NxN distance matrix for Graph B and nodesA and nodesB: node lists in same order as matrices \\
 then computes persistence diagrams \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        dgmA, resA = persistence_from_distance(DA, maxdim=maxdim)
-        dgmB, resB = persistence_from_distance(DB, maxdim=maxdim)
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+dgmA, resA = persistence_from_distance(DA, maxdim=maxdim)
+dgmB, resB = persistence_from_distance(DB, maxdim=maxdim)
+\end{verbatim}
 \end{tcolorbox}
 saves persistence diagrams \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        np.save(f"{nameA}_dgms.npy", dgmA)
-        np.save(f"{nameB}_dgms.npy", dgmB)
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+np.save(f"{nameA}_dgms.npy", dgmA)
+np.save(f"{nameB}_dgms.npy", dgmB)
+\end{verbatim}
 \end{tcolorbox}
 converts diagrams to JSON \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        json.dump(persistence_to_dict(dgmA), f)
-        json.dump(persistence_to_dict(dgmB), f)
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+json.dump(persistence_to_dict(dgmA), f)
+json.dump(persistence_to_dict(dgmB), f)
+\end{verbatim}
 \end{tcolorbox}
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        {
-  "H0": [[0, 1], [0, 2], ...],
-  "H1": [[1.2, 3.5], ...]
-        }
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+{
+"H0": [[0, 1], [0, 2], ...],
+"H1": [[1.2, 3.5], ...]
+}
+\end{verbatim}
 \end{tcolorbox}
 saves all visual diagrams \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        figA = plot_and_save(dgmA, title=nameA, tag=f"{nameA}_tda")
-        figB = plot_and_save(dgmB, title=nameB, tag=f"{nameB}_tda")        
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+figA = plot_and_save(dgmA, title=nameA, tag=f"{nameA}_tda")
+figB = plot_and_save(dgmB, title=nameB, tag=f"{nameB}_tda")        
+\end{verbatim}
 \end{tcolorbox}
 compute raw topological distances \\
 Normalize distances by graph diameter \\
-\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
-    \begin{verbatim}
-        diamA = graph_diameter(graphA)
-        diamB = graph_diameter(graphB)
-        diam_scale = max(diamA, diamB)    
-        norm_metrics[k + "_norm"] = metrics[k] / diam_scale          
-    \end{verbatim}
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+diamA = graph_diameter(graphA)
+diamB = graph_diameter(graphB)
+diam_scale = max(diamA, diamB)    
+norm_metrics[k + "_norm"] = metrics[k] / diam_scale          
+\end{verbatim}
 \end{tcolorbox}
 Normalization prevents large networks from always having larger metric values \\    
 
-\section*{Other UMLs}
+\section*{DC\_plus.py}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{"DCPlus.png"}
+    \caption{UML Diagram for DCPlus.py activity}
+    
+\end{figure}
+\textbf{Lines of Code Explained} \\
+\textbf{Imports} \\
+xml.etree.ElementTree : read KGML/SBML XML \\
+numpy, pandas : numerical ops \\
+networkx : used for constructing reaction graphs \\
+matplotlib, seaborn for plotting \\
+argparse, json, os, sys  for CLI + file handling \\
+logging for debugging output \\
+scipy.integrate.solve\_ivp as an ODE solver \\
+dtaidistance.dtw for dynamic time warping \\
+scipy.stats.pearsonr  for computing correlations \\
+matplotlib.animation.FuncAnimation for animations \\
+\\
+\textbf{parse\_kgml(kgml\_file)} \\
+this function extract species and reactions from KGML files. \\
+just like what Topology\_Compare.py does \\
+it parses the XML tree \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+tree = ET.parse(kgml_file)
+root = tree.getroot()             
+\end{verbatim}
+\end{tcolorbox}
+Extract species \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+if entry.get('type') == 'compound':
+   species_map[id] = name            
+\end{verbatim}
+\end{tcolorbox}
+each reaction is converted into a dictionary \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+{
+    'id': rid,
+    'substrates': [(sid, sto), ...],
+    'products': [(pid, sto), ...]
+}                
+\end{verbatim}
+\end{tcolorbox}
+it returns : species\_list: list of KEGG IDs \\
+reactions: list of substrate/product structures \\
+species\_map: mapping ID → name \\
+\\
+\textbf{parse\_sbml(sbml\_file)} \\
+SBML files have different structure, very different in comparison to KGML \\
+this functions extracts the same information from SBML format. \\
+Identify SBML XML namespace \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+ns = {'sbml': 'http://www.sbml.org/sbml/level2/version4'}              
+\end{verbatim}
+\end{tcolorbox}
+Extract species \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+species_list = [s.get('id') for s in species_elems]
+\end{verbatim}
+\end{tcolorbox}
+Extract reactions \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+<listOfReactants>
+    <speciesReference species="A" stoichiometry="2"/>
+</listOfReactants>
+\end{verbatim}
+\end{tcolorbox}
+It returns the same 2 objects as KGML parser \\
+\\
+\textbf{parse\_auto(file\_path)} \\
+This function automatically detect if the file is KGML or SBML. \\
+Detection works by reading the first 2KB of the file \\
+if it contains "<sbml" tag, it is SBML \\
+else if it contains "<pathway" tag, it is KGML \\
+else it raises an error \\
+\\
+\textbf{load\_params(params\_path)} \\
+parameter loading is optional \\
+purpose of this function is to load reaction rate constants (k) and model types \\
+If JSON: \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+{
+    "default_k": 1.0,
+    "reactions": {
+        "R1": {"k": 0.1, "type": "massaction"}
+    }
+}      
+\end{verbatim}
+\end{tcolorbox}
+If CSV: \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+reaction_id, k, type
+R1, 0.2, massaction
+R2, 0.05, massaction
+\end{verbatim}
+\end{tcolorbox}
+Output format: \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+{
+    'reactions': {
+        'R1': {'k': 0.2, 'type': 'massaction'},
+            ...
+    },
+    'default_k': <value or None>
+}      
+\end{verbatim}
+\end{tcolorbox}
+Always returns a dictionary \\
+\\
+\textbf{build\_ode\_system(species\_list, reactions, params=None, default\_k=1.0)} \\
+Purpose of this function is to convert the parsed reaction list into a Stoichiometry matrix S, Reaction rate law definitions and a callable ODE function that computes dX/dt \\
+This is the mathematical heart of our deterministic simulation. \\
+Initialize \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+n = len(species_list)
+m = len(reactions)
+species_index = {sid: i for i, sid in enumerate(species_list)}
+S = np.zeros((n, m))       
+\end{verbatim}
+\end{tcolorbox}
+Where: \\
+n = number of species \\
+m = number of reactions \\
+species\_index gives fast lookup \\
+S = stoichiometric matrix \\
+Fill stoichiometric matrix \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+S[idx, j] -= sto
+S[idx, j] += sto    
+\end{verbatim}
+\end{tcolorbox}
+Load reaction parameters (k, type) \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+reaction_info = [
+    {
+        'id': 'R5',
+        'k': 0.1,
+        'type': 'massaction',
+        'substrate_idxs': [0, 2],
+        'product_idxs': [5],
+        'sto_subs': [1, 2]
+    },
+        ...
+]          
+\end{verbatim}
+\end{tcolorbox}
+Build the actual ODE function \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def odes(t, x):
+    v = np.zeros(m)         
+\end{verbatim}
+\end{tcolorbox}
+Mass-action kinetics \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+rate = k * Π (x[species] ** stoich)         
+\end{verbatim}
+\end{tcolorbox}
+Rates: dX/dt \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+dxdt = S.dot(v)
+return dxdt            
+\end{verbatim}
+\end{tcolorbox}
+Output is The ODE function, Species index mapping and Reaction metadata. \\
+\\
+\textbf{simulate(...)} \\
+Our ODE solver function \\
+purpose is to integrate the ODE system over time using SciPy's solver\_ivp \\
+Default Behaviour: Use RK45 solver, Simulate between t\_span = (0, 20), Evaluate n\_points = 200 points and Start with initial concentration = ones vector \\
+Adaptive "stop at steady state": \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+dx = ||x(t_n) - x(t_{n-1})||
+if dx < threshold:
+    stop early              
+\end{verbatim}
+\end{tcolorbox}
+If steady\_threshold is provided: \\
+Output is used for dynamic comparsion (DTW, MSE, correlations) \\
+\\
+\textbf{simulate\_gillespie(...)} \\
+Monte Carlo simulation of reaction network using Gillespie SSA. This models discrete molecules counts with probabilistic behaviour. \\
+Initialize molecule counts \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+X = 50 molecules for each species          
+\end{verbatim}
+\end{tcolorbox}
+Build update vectors \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+dx = vector showing molecule changes
+e.g. A + B → C gives dx = [-1, -1, +1]            
+\end{verbatim}
+\end{tcolorbox}
+Compute propensities \\ 
+\left( a_{j} = k_{j} \prod (X_{i})^{sto_{i}} \right) \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+for s species:
+    if count < sto: a = 0
+    else a *= count * (count-1) * ...          
+\end{verbatim}
+\end{tcolorbox}
+Select next reaction \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+tau = -ln(r1)/a0
+choose reaction j where cumulative_sum > r2 * a0            
+\end{verbatim}
+\end{tcolorbox}
+Apply update \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+X = X + updates[j]
+t = t + tau            
+\end{verbatim}
+\end{tcolorbox}
+Output returns: times[ ] and states[ ][ ] \\
+\\
+\textbf{concs\_to\_counts and counts\_to\_concs} \\
+This function is created for better comparison, these convert between continuous ODE concentrations and integer SSA molecule counts. \\
+conversion formula is: counts = concs * volume * Avogadro's number \\
+\\
+\textbf{convert\_k\_ode\_to\_k\_ssa} \\
+ODE rate constants do not equal SSA rate constants \\
+SSA works on counts, not concentrations. \\
+\\
+\textbf{estimate\_volume\_for\_target\_events(...)} \\
+automatically choose a simulation volume such that Gillespie SSA produces a reasonable number of reaction events. \\
+too small volume gives too few events \\
+too large volume gives too many events \\
+this function estimates a volume such that the total reaction count is equal to target\_events \\
+Our method is to compute approximate rates using inital conditions \\
+
+\\
+\textbf{gillespie\_setup\_diagnostics(...)} \\
+Give debugging information for SSA: initial molecule counts, example propensities and first few reaction rates. \\
+\\
+\textbf{simulate\_gillespie\_mc\_auto(...)} \\
+This function performs automatic volume estimation, gillespie Monte Carlo simulation, trajectory interpolation and production of mean & standard deviation signals \\
+Estimate Gillespie volume \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+V_required = estimate_volume_for_target_events(...)          
+\end{verbatim}
+\end{tcolorbox}
+Convert initial concentrations to counts \\
+Convert ODE rates to SSA rates\\
+Run multiple SSA simulations \\
+Interpolate all runs onto a common fixed grid \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+np.interp          
+\end{verbatim}
+\end{tcolorbox}
+Output mean, std, and all trajectories \\
+\\
+\textbf{normalize\_rows(y)} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def normalize_rows(y):   
+    mx = np.max(y, axis=1, keepdims=True)
+    mx[mx == 0] = 1.0
+    return y / mx       
+\end{verbatim}
+\end{tcolorbox}
+it scales each species time series to [0, 1] range \\
+because dynamic similarity measure (DTW, MSE, Correlation) are sensitive to absolute scales \\
+\\
+\textbf{compute\_similarity(y1, y2)} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def compute_similarity(y1, y2):    
+    n = min(y1.shape[0], y2.shape[0])
+    y1n = normalize_rows(y1[:n])
+    y2n = normalize_rows(y2[:n])       
+\end{verbatim}
+\end{tcolorbox}
+it only compares shared species count \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+n = min(#species in y1, #species in y2)   
+\end{verbatim}
+\end{tcolorbox}
+Normalize each species trajectory to [0,1] for DTW & Correlation \\
+Outputs dictionary, averages : dtw\_avg, mse\_avg, corr\_avg \\
+per species lists: dtw, mse and corr \\
+\\
+\textbf{save\_plot(fig, path)} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def save_plot(fig, path):
+    fig.tight_layout()
+    fig.savefig(path, dpi=300)
+    plt.close(fig)   
+\end{verbatim}
+\end{tcolorbox}
+it is a centralised helper function to clean up figure layout, save consistently and close the figure to avoid memory leaks. \\
+\\
+\textbf{build\_network\_graph(...)} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def build_network_graph(species_list, reaction_info, species_map=None):
+    G = nx.DiGraph()
+    for sid in species_list:
+        G.add_node(sid)  
+\end{verbatim}
+\end{tcolorbox}
+purpose is to build a directed reaction graph, Nodes are species, edge from substrate are products \\
+each edge stores the reaction ID \\
+this is used by the animated network visualisation \\
+\\
+\textbf{animate\_network\_polished\_v3(...)} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def animate_network_polished_v3(G, species_list, reaction_info,
+ t, y, pos, save_path,
+    duration_sec=10, slow_factor=0.25):
+    fig, ax = plt.subplots(figsize=(16, 12))  
+    palette = sns.color_palette("rocket", n_colors=len(species_list))
+    node_color_map = {sid: palette[i] for i, sid in enumerate(species_list)}
+    base_node_size = 400
+    total_frames = len(t)
+    fps = 30
+    skip = max(1, total_frames // (duration_sec * fps))
+    frame_indices = np.arange(0, total_frames, skip)
+    interval = 1000 / fps / slow_factor
+\end{verbatim}
+\end{tcolorbox}
+generates an mp4 animation of the network over time. \\
+Each species (node) changes size depending on current concentration \\
+nodes size is 400 + 5000* concentration \\
+Based on instantaneous reaction rate derived from mass action formula.\\
+\\
+\textbf{plot\_trajectories(...)} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def plot_trajectories(t, y, species, title, save_path):
+    fig = plt.figure(figsize=(12, 7))
+    colors = sns.color_palette('tab20', max(4, len(species)))
+    for i in range(y.shape[0]):
+        plt.plot(t, y[i], label=species[i], lw=1.5, 
+        color=colors[i % len(colors)])
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=8)
+    plt.xlabel('Time')
+    plt.ylabel('Concentration')
+    plt.title(title)
+    save_plot(fig, save_path)
+\end{verbatim}
+\end{tcolorbox}
+Plots each species as a separate curve. \\
+Uses tab20 palette, wraps colors if >20 species. \\
+Moves legend outside to avoid clutter. \\
+Saved via save\_plot \\
+\\
+\textbf{plot\_overlay(...)} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+def plot_overlay(t1, y1, t2, y2, species, save_path):
+    fig = plt.figure(figsize=(14, 8))
+    n = min(y1.shape[0], y2.shape[0])
+    colors = sns.color_palette('tab20', max(4, n))
+\end{verbatim}
+\end{tcolorbox}
+Shows Net1 vs Net2 for every common species \\
+Solid curve is Net1 and Dashed curve is Net2 \\
+\\
+\textbf{main()} \\
+\begin{tcolorbox}[colback=magenta!10, colframe=magenta!20, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+parser = argparse.ArgumentParser(...)
+parser.add_argument('file1')
+parser.add_argument('file2')
+...
+args = parser.parse_args()    
+\end{verbatim}
+\end{tcolorbox}
+Reads all CLI parameters such as: \\
+Which input files to compare \\
+Whether to use ODE or Gillespie \\
+How long to simulate \\
+Whether to animate \\
+Parameter file (k values) \\
+
+
+
+
+
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{"pipe.png"}
     \caption{UML Diagram for Pipeline}
-    
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.55\textwidth]{"DCPlus.png"}
-    \caption{UML Diagram for DCPlus.py activity}
     
 \end{figure}
 

@@ -24,7 +24,7 @@ def main():
     run_dir = os.path.join(args.outdir, timestamp)
     os.makedirs(run_dir, exist_ok=True)
 
-    print(f"\n=== Running joint analysis ===")
+    print(f"\n Running joint analysis")
     print(f"Results will be stored in: {run_dir}\n")
 
     
