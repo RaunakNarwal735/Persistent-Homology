@@ -88,29 +88,315 @@ Indian Institute of Science Education and Research, Mohali, 130406, Punjab}
 We have added comments, docstrings and created UML diagrams for all of our scripts. UML files were created using \href{https://www.planttext.com/}{planttext} website, it take PUML files and outputs PNGs and SVGs.
 I have added Numpy styled Docstrings using Pyment library, afterwards i have manually edited them to make them more descriptive and useful. I would try to include all the basics that build up to make our code. The information in the scripts, Readme file and this report overlaps.
 Each of them has their own purpose and is useful in its own way.
-\section*{Validation on Small Networks}
-To be continued, it does create lots of errors such as SBML (XML) files dont have a KEGG ID so they have zero species in common which makes dynamic comparison invalid, for topological comparison, we don't yet have a framework to convert SBML files into CSV, so all of these would be done in the next report along with other pending agendas.
-\section*{ Future Work Timeline}
- 
-\begin{table}[H]
+\begin{figure}[H]
     \centering
-    \begin{tabular}{ccc}
-        Event & Timeline \\
-        Biweekly Report 1 & 21 August  \\
-        Biweekly Report 1.1 &  25 August \\
-        Mid semester exams &  1-2 September \\
-        Biweekly Report 2 & \sout{3 September} 7 September  \\
-        Mid semester exams &  \sout{3 September}  10 September  \\
-        Awaiting Feedback &   September-October \\
-        Mid semester II exams &    10-16 October \\
-        Biweekly Report 3 &  \sout{21 September} 24 October  \\
-        Biweekly Report 4 & 7 November \\
-        End Semester Exams & 14-26 November \\
-        Biweekly Report 4.1 & 2 December \\
-    \end{tabular}
-    \label{tab:placeholder}
-\end{table}
-\vfill
+    \includegraphics[width=1\textwidth]{"architecture.png"}
+    \caption{UML Diagram }
+    
+\end{figure}
+\section*{Topology\_Compare.py}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{"Top.png"}
+    \caption{UML Diagram for Topology\_Compare.py}
+    
+\end{figure}
+\textbf{Lines of Code Explained} \\
+The code imports argparse (for command line interface)\\
+os/Pathlib for file and directory handling \\
+json for saving metrics \\
+numpy and pandas for data handling \\
+networkx for graph operations \\
+floyd warshall is useful in computing shortest path matrix \\
+ripser is imported for persistent homology computation \\
+persim for plotting and distances \\
+seaborn for aesthethic graphs and plotting \\
+xml.etree.ElementTree for parsing XML files \\
+\\
+\textbf{ensure\_outdir(path)} \\
+This function checks if the output directory exists, if not it creates one. \\
+It wraps a string path into a path object \\
+calls mkdir method with exist\_ok = True, it creates nested folders if needed and prevents errors if directory alreadt exists.\\
+\\
+\textbf{kgml\_to\_csv(kgml\_path, out\_csv)} \\
+This function converts pathways from KEGG KGML format into CSV format so that rest of the pipeline can easily read. \\
+KGML contains entry notes : species , enzymes and compunds \\
+relation edges : regulation links and reaction edges : metabolic conversions \\
+The function works by parsing the XML tree structure of KGML file \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+\begin{verbatim}
+    tree = ET.parse(kgml_path)
+    root = tree.getroot()
+\end{verbatim}
+    
+\end{tcolorbox}
+
+It iterates over entries and relations to extract nodes and edges \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        entries[eid] = name
+        edges.append((source_name, target_name, rtype))
+    \end{verbatim}
+        
+\end{tcolorbox}
+Extracts reactions \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+    <reaction>
+       <substrate id="X"/>
+       <product id="Y"/>
+    </reaction>
+    \end{verbatim}
+        
+\end{tcolorbox}
+the loop\\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        for s in substrates:
+        for p in products:
+            edges.append((entries[s], entries[p], "reaction"))
+    \end{verbatim}
+\end{tcolorbox}
+        
+Then it converts them into pandas DataFrames and saves them as CSV files. \\
+\\
+\textbf{load\_graph\_from\_csv(csv\_path)} \\
+This function loads a CSV file into NetworkX graph \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        df = pd.read_csv(csv_path)
+        df.columns = [c.lower() for c in df.columns]
+    \end{verbatim}
+\end{tcolorbox}
+it reads the CSV using pandas, creates a directed graph internally \\
+Then it builds an undirected projection, because distance matrix must be symmetric\\
+Persistent Homology for asymmetric graphs is not well defined. \\
+\\
+\textbf{load\_graph\_from\_kgml(kgml\_path)} \\
+this is similar to above but it directly constructs a networkX graph without saving CSV. \\
+the previous function outputs a CSV edge list but this outputs a graph, so they share logic but serve different parts of our pipeline. \\
+\\
+\textbf{graph\_diameter(G)} \\
+This function computes the diameter of a graph G \\
+which is the longest shortest path between any two nodes \\
+it handles trivial cases \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+    if G.number_of_nodes() == 0:
+        return 0
+    \end{verbatim}
+\end{tcolorbox}
+if the graph is connected, then use NetworkX built in BFS diameter \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        if nx.is_connected(G):
+        try:
+            return int(nx.diameter(G))    
+    \end{verbatim}
+\end{tcolorbox}
+and if it fails , then fallback \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        D = dict(nx.all_pairs_shortest_path_length(G))
+        maxd = max(d for u in D for d in D[u].values())          
+    \end{verbatim}
+\end{tcolorbox}
+We compute diameter because later, bottleneck/wasserstein are normalized by graph diameter to make metrics comparable across networks. \\
+\\
+\textbf{shortest\_path\_distance\_matrix(G, disconnected\_value=None)} \\
+this is a very critical function in our pipeline, it converts the graph into N*N distance matrix which is then used by Ripser for computing persistent homology. \\
+Lists nodes and indexing \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        nodes = list(G.nodes())
+        idx = {node: i for i,node in enumerate(nodes)}          
+    \end{verbatim}
+\end{tcolorbox}
+this creates consistent ordering of nodes \\
+initializes distance matrix with disconnected value (infinity by default) \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        D = np.full((n, n), np.inf)
+        np.fill_diagonal(D, 0)               
+    \end{verbatim}
+\end{tcolorbox}
+fill matrix with edge weights \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        for u, v, data in G.edges(data=True):
+        w = data.get("weight", 1.0)
+        D[i,j] = w
+        D[j,i] = w                 
+    \end{verbatim}
+\end{tcolorbox}
+floyd warshall algorithm is used to compute all pairs shortest paths \\
+this computes all pairs shortest paths efficiently \\
+replaces infinities with a large finite value \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        if disconnected_value is None:
+             disconnected_value = 2 * max(finite_distances)
+        D[~np.isfinite(D)] = disconnected_value                
+    \end{verbatim}
+\end{tcolorbox}
+
+\textbf{persistence\_from\_distance(D, maxdim=1, thresh=None)} \\
+purpose is to run  Ripser persistent homology on the distance matrix \\
+it sets threshold for filtration. \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        thresh = 95th percentile of distances              
+    \end{verbatim}
+\end{tcolorbox}
+calls ripser with distance matrix and parameters \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        res = ripser(D, maxdim=maxdim, thresh=thresh, distance_matrix=True)         
+    \end{verbatim}
+\end{tcolorbox}
+it outputs the diagram in a list form\\
+\\
+\textbf{persistence\_to\_dict(dgms)}\\
+it converts diagrams into a dictionary format for easier storage and retrieval \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+         {
+         "H0": [[birth, death], ...],
+          "H1": [[birth, death], ...]
+        }
+    \end{verbatim}
+\end{tcolorbox}
+\textbf{plot\_and\_save(diagrams, title, outdir, tag)} \\
+creates a PNG image of the persistence diagram. \\
+\textbf{plot\_graph(G, outdir, name)} \\
+this ceates the graphs visualisations \\
+compute layout \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        pos = nx.spring_layout(G, seed=42)
+        cmap = plt.get_cmap('viridis')
+    \end{verbatim}
+\end{tcolorbox}
+degree based node size: nodes with higher degree appear larger \\
+degree based color\\
+\\
+\textbf{compute\_distance\_metrics(dgA, dgB, p=2)} \\
+this computes the TDA distances between two diagrams \\
+it computes bottleneck and wasserstein distances for each homology dimension \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        bn = bottleneck(A, B)
+        ws = wasserstein(A, B, p=p)
+    \end{verbatim}
+\end{tcolorbox}
+\textbf{compare\_diagrams\_full(diagA, diagB, p=2)} \\
+it computes distances across all homology dimensions present \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        maxdim = max(len(diagA), len(diagB))
+    \end{verbatim}
+\end{tcolorbox}
+loops across dimensions \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        for dim in range(maxdim):
+          A = diagA[dim]
+          B = diagB[dim]
+          bn, ws = compute_distance_metrics(A, B)
+          metrics[f"H{dim}_bottleneck"] = bn
+          metrics[f"H{dim}_wasserstein"] = ws
+    \end{verbatim}
+\end{tcolorbox}
+\textbf{run\_pipeline(graphA, graphB, nameA, nameB, outdir, maxdim, p)} \\
+this function integrates every stage, this is exatly what run\_all.py calls. \\
+ensures output directory \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        out = ensure_outdir(outdir)
+    \end{verbatim}
+\end{tcolorbox}
+Compute distance matrices\\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        DA, nodesA = shortest_path_distance_matrix(graphA)
+        DB, nodesB = shortest_path_distance_matrix(graphB)
+    \end{verbatim}
+\end{tcolorbox}
+These produce:
+ DA: NxN distance matrix for Graph A, DB: NxN distance matrix for Graph B and nodesA and nodesB: node lists in same order as matrices \\
+then computes persistence diagrams \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        dgmA, resA = persistence_from_distance(DA, maxdim=maxdim)
+        dgmB, resB = persistence_from_distance(DB, maxdim=maxdim)
+    \end{verbatim}
+\end{tcolorbox}
+saves persistence diagrams \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        np.save(f"{nameA}_dgms.npy", dgmA)
+        np.save(f"{nameB}_dgms.npy", dgmB)
+    \end{verbatim}
+\end{tcolorbox}
+converts diagrams to JSON \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        json.dump(persistence_to_dict(dgmA), f)
+        json.dump(persistence_to_dict(dgmB), f)
+    \end{verbatim}
+\end{tcolorbox}
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        {
+  "H0": [[0, 1], [0, 2], ...],
+  "H1": [[1.2, 3.5], ...]
+        }
+    \end{verbatim}
+\end{tcolorbox}
+saves all visual diagrams \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        figA = plot_and_save(dgmA, title=nameA, tag=f"{nameA}_tda")
+        figB = plot_and_save(dgmB, title=nameB, tag=f"{nameB}_tda")        
+    \end{verbatim}
+\end{tcolorbox}
+compute raw topological distances \\
+Normalize distances by graph diameter \\
+\begin{tcolorbox}[colback=orange!10, colframe=orange!10, boxrule=0.95pt, arc=6pt, auto outer arc, boxsep=6pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+    \begin{verbatim}
+        diamA = graph_diameter(graphA)
+        diamB = graph_diameter(graphB)
+        diam_scale = max(diamA, diamB)    
+        norm_metrics[k + "_norm"] = metrics[k] / diam_scale          
+    \end{verbatim}
+\end{tcolorbox}
+Normalization prevents large networks from always having larger metric values \\    
+
+\section*{Other UMLs}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{"pipe.png"}
+    \caption{UML Diagram for Pipeline}
+    
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{"DCPlus.png"}
+    \caption{UML Diagram for DCPlus.py activity}
+    
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{"req.png"}
+    \caption{}
+    
+\end{figure}
+
+    \vfill
+
 \noindent{\small Generated: \today}
 
 \end{document}

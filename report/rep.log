@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 24.1) (preloaded format=xelatex 2025.8.22)  11 DEC 2025 03:21
+This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 24.1) (preloaded format=xelatex 2025.8.22)  11 DEC 2025 05:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -842,39 +842,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 80--80
 
  []
 
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 9
-7.
-(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
-File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 9
-7.
-
-(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
-File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-97.
-
-(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
-File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-97.
-
-(C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
-File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 97.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 97.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 97.
-
+File: architecture.png Graphic file (type bmp)
+<architecture.png>
+File: Top.png Graphic file (type bmp)
+<Top.png>
 [1
 
 ]
+Overfull \vbox (10.52039pt too high) has occurred while \output is active []
+
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -882,25 +859,284 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[2] (rep.aux)
+[2]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+28.
+ (C:\Users\rishu narwal\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `lmtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+Underfull \hbox (badness 10000) in paragraph at lines 105--133
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 105--133
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 105--133
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 135--142
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--152
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 153--160
+
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 162--171
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--171
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--189
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--189
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--189
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--197
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 198--204
+
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 205--215
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 205--215
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 216--223
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 224--232
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--242
+
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 244--251
+
+ []
+
+
+Overfull \hbox (44.05733pt too wide) in paragraph at lines 255--255
+[]        \T1/lmtt/m/n/12 res = ripser(D, maxdim=maxdim, thresh=thresh, distanc
+e_matrix=True) 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 252--257
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 258--269
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 258--269
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--280
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 281--292
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 281--292
+
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 293--299
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 300--310
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 311--318
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 319--325
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 326--334
+
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 335--341
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 342--348
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 357--363
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 364--373
+
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 374--375
+
+ []
+
+File: pipe.png Graphic file (type bmp)
+<pipe.png>
+File: DCPlus.png Graphic file (type bmp)
+<DCPlus.png>
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[9]
+File: req.png Graphic file (type bmp)
+<req.png>
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[10]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[11] (rep.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `rep.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 22936 strings out of 409617
- 426528 string characters out of 5772592
- 1929191 words of memory out of 5000000
- 44725 multiletter control sequences out of 15000+600000
- 587567 words of font info for 55 fonts, out of 8000000 for 9000
+ 22970 strings out of 409617
+ 426488 string characters out of 5772592
+ 1928191 words of memory out of 5000000
+ 44770 multiletter control sequences out of 15000+600000
+ 582853 words of font info for 48 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 83i,12n,87p,1239b,559s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 83i,13n,87p,1239b,559s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on rep.pdf (2 pages).
+Output written on rep.pdf (11 pages).
